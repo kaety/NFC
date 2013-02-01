@@ -3,10 +3,11 @@
     package="kandidat.nfc.nfcapp"
     android:versionCode="1"
     android:versionName="1.0" >
-
+<!-- Android SDK 10 eller högre krävs för NFC -->
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="10"
         android:targetSdkVersion="17" />
+    <uses-permission android:name="android.permission.NFC"/>
 
     <application
         android:allowBackup="true"
