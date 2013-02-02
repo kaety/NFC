@@ -1,10 +1,12 @@
 package kandidat.nfc.nfcapp;
 
 import android.nfc.NfcAdapter;
+import android.nfc.NfcManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.view.Menu;
 
@@ -12,7 +14,7 @@ public class MainActivity extends Activity {
 	
 	
 	//Objekt som representerar NFC adaptern
-	private NfcAdapter mAdapter;
+	private NfcAdapter nfcAdapter;
 
     @Override
     /**
@@ -22,14 +24,15 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        //Detta är en kontroll att appen har minst den SDK-version som krävs för
-        //att använda NFC
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD_MR1) {
-        	// do whatever necessary to hide NFC features
-        }
-        mAdapter = NfcAdapter.getDefaultAdapter(getBaseContext());
-        if(mAdapter == null){
-        	//Telefonen saknar NFC-adapter
+        
+        //Får tag i ett objekt som representerar NFC-adaptern
+        NfcManager manager = (NfcManager) getBaseContext().getSystemService(Context.NFC_SERVICE);
+        nfcAdapter = manager.getDefaultAdapter();
+        
+        if(!nfcAdapter.isEnabled()){
+        	//Öppnar menyn så att användaren kan aktivera NFC
+        	Intent nfcOptionsIntent = new Intent(android.provider.Settings.ACTION_NFC_SETTINGS);
+        	startActivity(nfcOptionsIntent);     
         }
     }
 

@@ -3,11 +3,13 @@
     package="kandidat.nfc.nfcapp"
     android:versionCode="1"
     android:versionName="1.0" >
-<!-- Android SDK 10 eller högre krävs för NFC -->
+<!-- Android SDK 10 eller högre krävs för NFC. Version 14 har alla de senaste funktionerna -->
     <uses-sdk
-        android:minSdkVersion="10"
+        android:minSdkVersion="14"
         android:targetSdkVersion="17" />
+    <!-- Tillåter NFC samt gör appen endast tillgänglig för telefoner med NFC -->
     <uses-permission android:name="android.permission.NFC"/>
+    <uses-feature android:name="android.hardware.nfc" android:required="true" />
 
     <application
         android:allowBackup="true"
