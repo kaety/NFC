@@ -8,7 +8,8 @@ import android.os.Parcelable;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.view.Menu;
+import android.view.*;
+
 
 public class MainActivity extends Activity {
 	
@@ -24,16 +25,47 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        
-        //Får tag i ett objekt som representerar NFC-adaptern
+         
+    /*    //Får tag i ett objekt som representerar NFC-adaptern
         NfcManager manager = (NfcManager) getBaseContext().getSystemService(Context.NFC_SERVICE);
         nfcAdapter = manager.getDefaultAdapter();
         
         if(!nfcAdapter.isEnabled()){
         	//Öppnar menyn så att användaren kan aktivera NFC
         	Intent nfcOptionsIntent = new Intent(android.provider.Settings.ACTION_NFC_SETTINGS);
-        	startActivity(nfcOptionsIntent);     
-        }
+        	startActivity(nfcOptionsIntent);    
+        }*/
+    }
+    
+    /** Called when the user clicks the Send button */
+    public void sendNFCMessage(View view) {
+        // Do something in response to NFC send button
+    	
+    	//START LOADING SCREEN FIRST????
+    	//SEND AND RECIEVE NFC MESSAGE HERE IF WE GET WHAT WE WANT ->>
+    	//START ACCESSACTIVITY ELSE START DENIEDACTIVITY
+    	
+    	//NFC ACCESS
+    	if(1==1){
+    	Intent intent = new Intent(this, AccessActivity.class);
+    	startActivity(intent);
+    	}
+    	else{
+    		//NOT NFC ACCESS
+    	
+    	    	Intent intent = new Intent(this, DeniedActivity.class);
+    	    	startActivity(intent);
+    	    	
+    	}
+    	
+    }
+   
+    
+    /** Called when the user clicks the Settings button */
+    public void settingsAct(View view) {
+    	
+    	Intent intent = new Intent(this, SettingsActivity.class);
+    	startActivity(intent);
     }
 
     @Override

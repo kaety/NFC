@@ -3,14 +3,22 @@
     package="kandidat.nfc.nfcapp"
     android:versionCode="1"
     android:versionName="1.0" >
-<!-- Android SDK 10 eller högre krävs för NFC. Version 14 har alla de senaste funktionerna -->
-    <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="17" />
-    <!-- Tillåter NFC samt gör appen endast tillgänglig för telefoner med NFC -->
-    <uses-permission android:name="android.permission.NFC"/>
-    <uses-feature android:name="android.hardware.nfc" android:required="true" />
 
+    <!-- Android SDK 10 eller högre krävs för NFC. Version 14 har alla de senaste funktionerna -->
+    <!--
+        <uses-sdk
+         android:minSdkVersion="14"
+        android:targetSdkVersion="17" />	-->
+    
+    <!-- Tillåter NFC samt gör appen endast tillgänglig för telefoner med NFC -->
+    <uses-permission android:name="android.permission.NFC" />
+    <!-- <uses-feature android:name="android.hardware.nfc" android:required="true" /> -->
+	
+	<!--  HAD TO CHANGE SDK VERSION FOR MY OLD PHONE/KRISTOFER -->
+    <uses-sdk
+        android:minSdkVersion="5" 
+        android:targetSdkVersion="17" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -24,6 +32,18 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="kandidat.nfc.nfcapp.SettingsActivity"
+            android:label="@string/menu_settings" >
+        </activity>
+        <activity
+            android:name="kandidat.nfc.nfcapp.AccessActivity"
+            android:label="@string/title_activity_access" >
+        </activity>
+        <activity
+            android:name="kandidat.nfc.nfcapp.DeniedActivity"
+            android:label="@string/title_activity_denied" >
         </activity>
     </application>
 
