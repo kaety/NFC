@@ -64,5 +64,6 @@ public class MainActivity extends Activity {
     	 //Parcelable message = intent.getParcelableExtra(NfcAdapter.ACTION_NDEF_DISCOVERED);
     	//do something with message
     }
+    
 }
 
