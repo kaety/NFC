@@ -5,6 +5,8 @@ NFC Projektarbete
 
 Hela appen:
 -------------------------------------------------------------------
+Appen använder inte det mordernare Android Beam utan Ndef Push Protocol (NPP) då det är det som biblioteket för Arduinon
+använder.
 
 
 
