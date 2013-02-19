@@ -49,7 +49,15 @@ public class NFCPMessage {
 		
 	}
 	
-	
+	public void clearpenis(){
+		name ="";
+		id =0;
+		typeOfMessage=0;
+		key=0;
+		status=false;
+		errorCode=0;
+		
+	}
 	
 	@Override
 	public String toString(){
