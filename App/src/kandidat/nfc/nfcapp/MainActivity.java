@@ -23,7 +23,7 @@ public class MainActivity extends Activity  implements CreateNdefMessageCallback
 	private NFCPMessage nfcpMessage;
 
 	//test
-	private Boolean flag = true;
+	private Boolean passflag = false;
 
 	//Objekt som representerar NFC adaptern
 	private NfcAdapter nfcAdapter;
@@ -86,8 +86,6 @@ public class MainActivity extends Activity  implements CreateNdefMessageCallback
 	@Override
 	public void onResume() {
 		super.onResume();
-		//nfcAdapter.enableForegroundDispatch(this, pendingIntent, 
-		//   intentFiltersArray, techListsArray);
 
 		// Check to see that the Activity started due to an Android Beam
 		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
@@ -197,5 +195,5 @@ public class MainActivity extends Activity  implements CreateNdefMessageCallback
 		TextView view = (TextView) findViewById(R.id.message);
 		view.setText(s + "\n");
 	}
-
+	
 }
