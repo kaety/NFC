@@ -23,6 +23,8 @@ public class LoginActivity extends Activity {
 
 		SharedPreferences pref = getSharedPreferences("password", 1);
 		String password = pref.getString("password", "");
+		
+		//first time you use the app
 		if (password.equals("")) {
 			
 			Toast toast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
@@ -31,7 +33,7 @@ public class LoginActivity extends Activity {
 			toast.show();
 			
 			startActivity(new Intent(this, SettingsActivity.class));
-
+			
 		}
 
 	}
