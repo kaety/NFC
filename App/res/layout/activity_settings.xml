@@ -13,36 +13,35 @@
         android:text="@string/menu_settings" />
 
     <EditText
-        android:id="@+id/passwordConfirm"
+        android:id="@+id/passwordCreate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/settings"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
         android:ems="10"
-        android:hint="Password"
-        android:inputType="numberPassword|textPassword" >
+        android:hint="new password..."
+        android:inputType="numberPassword" >
 
         <requestFocus />
     </EditText>
 
     <EditText
-        android:id="@+id/passwordCreate"
+        android:id="@+id/passwordConfirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/passwordConfirm"
-        android:layout_below="@+id/passwordConfirm"
+        android:layout_alignLeft="@+id/passwordCreate"
+        android:layout_below="@+id/passwordCreate"
         android:ems="10"
-        android:hint="Password again..."
-        android:inputType="numberPassword|textPassword" />
+        android:hint="confirm..."
+        android:inputType="numberPassword" />
 
     <Button
         android:id="@+id/submitPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/passwordCreate"
-        android:layout_below="@+id/passwordCreate"
+        android:layout_alignRight="@+id/passwordConfirm"
+        android:layout_below="@+id/passwordConfirm"
         android:onClick="changePassword"
-        android:text="Create new password" />
+        android:text="Change Password" />
 
 </RelativeLayout>
