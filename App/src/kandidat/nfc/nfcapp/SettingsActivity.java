@@ -81,7 +81,7 @@ public class SettingsActivity extends Activity {
 		//Clear textfields
 		e1.setText("");
 		e2.setText("");
-		//TODO get cursor to first textfield
+		//get cursor to first textfield
 		e1.requestFocus();
 	}	
 		
