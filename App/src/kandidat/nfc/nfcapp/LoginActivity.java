@@ -1,7 +1,9 @@
 package kandidat.nfc.nfcapp;
 
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -32,7 +34,7 @@ public class LoginActivity extends Activity {
 			toast.setText("Please choose a password");
 			toast.show();
 			
-			startActivity(new Intent(this, SettingsActivity.class));
+			startActivity(new Intent(this, PasswordActivity.class));
 			
 		}
 
@@ -78,6 +80,10 @@ public class LoginActivity extends Activity {
 				edit.setText("");
 				if (tries == 0) {
 					toast.setText("NO MORE TRIES");
+					//bra vibrationer
+					Vibrator vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);  
+				    vib.vibrate(1000);
+					finish();
 					finish();
 
 				} else {

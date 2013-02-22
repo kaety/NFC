@@ -10,5 +10,7 @@
     <string name="title_activity_denied">Access Denied</string>
     <string name="access_denied">ACCESS DENIED</string>
     <string name="title_activity_login">Login</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_settings">SettingsActivity</string>
 
 </resources>

@@ -2,15 +2,11 @@ package kandidat.nfc.nfcapp;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.SharedPreferences.Editor;
-import android.text.Editable;
-import android.text.Selection;
-import android.view.Gravity;
+import android.content.Intent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.support.v4.app.NavUtils;
 
 public class SettingsActivity extends Activity {
 
@@ -18,6 +14,8 @@ public class SettingsActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
+		// Show the Up button in the action bar.
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override
@@ -26,68 +24,26 @@ public class SettingsActivity extends Activity {
 		getMenuInflater().inflate(R.menu.activity_settings, menu);
 		return true;
 	}
-	
-	/**
-	 * Called when the user press the "Create new Password" Button
-	 * @param view
-	 */
-	public void changePassword(View view) {
-		Toast toast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
-		toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-		
-		EditText e1 = (EditText) findViewById(R.id.passwordCreate);
-		EditText e2 = (EditText) findViewById(R.id.passwordConfirm);
 
-		String stringpw1 = e1.getText().toString();
-		String stringpw2 = e2.getText().toString();
-
-		// Check for empty fields
-		if (stringpw1.equals("") || stringpw2.equals("")) {
-			
-			toast.setText("Empty field(s)");
-			toast.show();
-
-		} else {
-
-			int password = Integer.parseInt(stringpw1);
-			
-			//passwords match
-			if (password == Integer.parseInt(stringpw2)) {
-				
-				//password too short?
-				if(stringpw1.length() < 4){
-					toast.setText("Password to short, need to be atleast 4 digits");
-					toast.show();
-					
-				}
-				else{
-				
-				//Save new password
-				Editor editor = getSharedPreferences("password", 0).edit();
-				editor.putString("password", password + "");
-				editor.commit();
-				
-				// Go back to MainActivity
-				this.finish();
-				}
-			//Passwords didn't match	
-			} else {
-				toast.setText("Passwords didn't match");
-				toast.show();
-
-			}
-
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// This ID represents the Home or Up button. In the case of this
+			// activity, the Up button is shown. Use NavUtils to allow users
+			// to navigate up one level in the application structure. For
+			// more details, see the Navigation pattern on Android Design:
+			//
+			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
+			//
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
 		}
-		//Clear textfields
-		e1.setText("");
-		e2.setText("");
-		//get cursor to first textfield
-		e1.requestFocus();
-	}	
-		
-		
-		
-	
-	
+		return super.onOptionsItemSelected(item);
+	}
 
+	
+	public void toPassword(View view){
+		startActivity(new Intent(this,PasswordActivity.class));
+	}
 }
