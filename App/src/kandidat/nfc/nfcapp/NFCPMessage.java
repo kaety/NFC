@@ -49,7 +49,7 @@ public class NFCPMessage {
 		
 	}
 	
-	public void clearpenis(){
+	public void clear(){
 		name ="";
 		id =0;
 		typeOfMessage=0;

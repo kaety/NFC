@@ -2,8 +2,6 @@ package kandidat.nfc.nfcapp;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.Intent;
-import android.view.Menu;
 import android.widget.TextView;
 
 public class DeniedActivity extends Activity {
@@ -35,12 +33,7 @@ public class DeniedActivity extends Activity {
          		
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_denied, menu);
-		return true;
-	}
+
 
 	
 }

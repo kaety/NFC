@@ -16,16 +16,16 @@ import android.view.*;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity  implements CreateNdefMessageCallback {
+public class MainActivity extends Activity implements CreateNdefMessageCallback {
 
-	//ndefmessage strings
+	// ndefmessage strings
 	private String latestRecievedMsg;
 	private NFCPMessage nfcpMessage;
 
-	//test
+	// test
 	private Boolean passflag = false;
 
-	//Objekt som representerar NFC adaptern
+	// Objekt som representerar NFC adaptern
 	private NfcAdapter nfcAdapter;
 
 	@SuppressLint("NewApi")
@@ -33,32 +33,28 @@ public class MainActivity extends Activity  implements CreateNdefMessageCallback
 	/**
 	 * This function is lanched when the app is started.
 	 */
-	protected void onCreate(Bundle savedInstanceState){
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-
-
-		//Får tag i ett objekt som representerar NFC-adaptern
+		// Får tag i ett objekt som representerar NFC-adaptern
 		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
-		//Kolla om användarens NFC är påslagen
-		if(!nfcAdapter.isEnabled()){
-			//Öppnar menyn så att användaren kan aktivera NFC
+		// Kolla om användarens NFC är påslagen
+		if (!nfcAdapter.isEnabled()) {
+			// Öppnar menyn så att användaren kan aktivera NFC
 			startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
 		}
-		//Följande eftersom metoden endast finns för API 16 och högre medan t.ex. LG L5 har version 15
-		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN){
+		// Följande eftersom metoden endast finns för API 16 och högre medan
+		// t.ex. LG L5 har version 15
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
 			if (!nfcAdapter.isNdefPushEnabled()) {
 				startActivity(new Intent(Settings.ACTION_NFCSHARING_SETTINGS));
 			}
 		}
 
-
 		nfcAdapter.setNdefPushMessageCallback(this, this);
 	}
-
-
 
 	/** Called when the user clicks the Settings button */
 	public void settingsAct(View view) {
@@ -70,7 +66,7 @@ public class MainActivity extends Activity  implements CreateNdefMessageCallback
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		//getMenuInflater().inflate(R.menu.activity_main, menu);
+		// getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
 
@@ -79,7 +75,7 @@ public class MainActivity extends Activity  implements CreateNdefMessageCallback
 
 		super.onPause();
 
-		//nfcAdapter.disableForegroundDispatch(this);
+		// nfcAdapter.disableForegroundDispatch(this);
 
 	}
 
@@ -95,38 +91,39 @@ public class MainActivity extends Activity  implements CreateNdefMessageCallback
 	}
 
 	/**
-	 * Receives  ALL INTENTS 
+	 * Receives ALL INTENTS
+	 * 
 	 * @param intent
 	 */
 	void processIntent(Intent intent) {
-		
+
 		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
-			
+
 			setMessage(getLastestNFCMessage(intent));
 			nfcpMessage = new NFCPMessage(latestRecievedMsg);
 
-			if(nfcpMessage.getStatus() && nfcpMessage.getType()==3){
-				startActivity(new Intent(MainActivity.this, AccessActivity.class));
-			}
-			else if(!nfcpMessage.getStatus() && nfcpMessage.getType()==3){
-				//NOT NFC ACCESS
-				Intent deniedIntent =new Intent(MainActivity.this, DeniedActivity.class);
+			if (nfcpMessage.getStatus() && nfcpMessage.getType() == 3) {
+				startActivity(new Intent(MainActivity.this,
+						AccessActivity.class));
+			} else if (!nfcpMessage.getStatus() && nfcpMessage.getType() == 3) {
+				// NOT NFC ACCESS
+				Intent deniedIntent = new Intent(MainActivity.this,
+						DeniedActivity.class);
 				deniedIntent.putExtra("ErrorCode", nfcpMessage.getErrorCode());
 				startActivity(deniedIntent);
-				nfcpMessage.clearpenis();
+				nfcpMessage.clear();
 			}
 
 			getIntent().setAction("");
-		}
-		else{
+		} else {
 			setMessage("FUNKAR SOM DET SKA");
 		}
 	}
-	
 
 	@Override
 	public void onNewIntent(Intent intent) {
 		// onResume gets called after this to handle the intent
+		Toast.makeText(this, "FRAMME", Toast.LENGTH_SHORT).show();
 		setIntent(intent);
 	}
 
@@ -157,7 +154,6 @@ public class MainActivity extends Activity  implements CreateNdefMessageCallback
 			// att göra när vi tar emot meddelande typ 3
 			return null;
 
-
 		} else {
 			// allt går fel
 		}
@@ -174,11 +170,13 @@ public class MainActivity extends Activity  implements CreateNdefMessageCallback
 
 	/**
 	 * Gets the latest NFC message and return it as a string
+	 * 
 	 * @param intent
 	 * @return
 	 */
-	public String getLastestNFCMessage(Intent intent){
-		Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+	public String getLastestNFCMessage(Intent intent) {
+		Parcelable[] rawMsgs = intent
+				.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
 		// only one message sent during the beam
 		NdefMessage msg = (NdefMessage) rawMsgs[0];
 		return latestRecievedMsg = new String(msg.getRecords()[0].getPayload());
@@ -188,12 +186,13 @@ public class MainActivity extends Activity  implements CreateNdefMessageCallback
 
 	/**
 	 * Sets string s into debugging messagefield on the first screen.
+	 * 
 	 * @param s
 	 */
-	public void setMessage(String s){
+	public void setMessage(String s) {
 		// Toast.makeText(this, latestRecievedMsg, Toast.LENGTH_LONG).show();
 		TextView view = (TextView) findViewById(R.id.message);
 		view.setText(s + "\n");
 	}
-	
+
 }

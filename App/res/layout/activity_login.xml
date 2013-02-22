@@ -12,6 +12,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="28dp"
         android:ems="10"
+        android:maxLength="10"
         android:inputType="numberPassword" >
 
         <requestFocus />
@@ -23,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/editText1"
         android:layout_below="@+id/editText1"
-        android:onClick="unlockpressed"
+        android:onClick="unlockPressed"
         android:text="Unlock" />
 
 </RelativeLayout>

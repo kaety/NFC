@@ -8,7 +8,7 @@
     <!--
         <uses-sdk
          android:minSdkVersion="14"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="17" />
     -->
 
 
@@ -16,10 +16,9 @@
     <uses-permission android:name="android.permission.NFC" />
     <!-- <uses-feature android:name="android.hardware.nfc" android:required="true" /> -->
 
+    <uses-permission android:name="android.permission.VIBRATE" />
 
-    <!-- HAD TO CHANGE SDK VERSION FOR MY OLD PHONE/KRISTOFER -->
-    <!-- okej, men ändra tillbaka, man kan inte köra nfc på api5 -->
-    <!-- LG L5 använder Sdk-version 15 -->
+    <!-- LG L5 använder Sdk-version 15, s3 använder 16 -->
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -38,17 +37,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="text/plain" />
-            </intent-filter>
         </activity>
         <activity
             android:name="kandidat.nfc.nfcapp.PasswordActivity"
-            android:label="@string/menu_settings" >
+            android:label="@string/title_activity_settings" >
         </activity>
         <activity
             android:name="kandidat.nfc.nfcapp.AccessActivity"
@@ -61,6 +53,11 @@
         <activity
             android:name="kandidat.nfc.nfcapp.MainActivity"
             android:label="@string/title_activity_login" >
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
         </activity>
         <activity
             android:name="kandidat.nfc.nfcapp.SettingsActivity"

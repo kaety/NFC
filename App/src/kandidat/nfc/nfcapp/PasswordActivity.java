@@ -3,6 +3,7 @@ package kandidat.nfc.nfcapp;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.text.Editable;
 import android.text.Selection;
@@ -20,12 +21,7 @@ public class PasswordActivity extends Activity {
 		setContentView(R.layout.activity_password);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_password, menu);
-		return true;
-	}
+	
 	
 	/**
 	 * Called when the user press the "Create new Password" Button
@@ -67,8 +63,19 @@ public class PasswordActivity extends Activity {
 				editor.putString("password", password + "");
 				editor.commit();
 				
-				// Go back to MainActivity
-				this.finish();
+				// Go back to SettingsActivity/Login
+				Bundle extra = getIntent().getExtras();
+				//if we came from LoginActivity extra will not be null  
+				if(extra !=null){
+					String s= extra.getString("Key");
+					//if check not necessary but we keep it for "safety check"
+					if(s.equals("Value")){
+					startActivity(new Intent(this,LoginActivity.class));
+					}
+				}
+				finish();
+				
+				
 				}
 			//Passwords didn't match	
 			} else {
@@ -83,11 +90,6 @@ public class PasswordActivity extends Activity {
 		e2.setText("");
 		//get cursor to first textfield
 		e1.requestFocus();
-	}	
-		
-		
-		
+	}
 	
-	
-
 }
