@@ -8,31 +8,35 @@ Hela appen:
 Appen använder inte det mordernare Android Beam utan Ndef Push Protocol (NPP) då det är det som biblioteket för Arduinon
 använder.
 
-
+-Om det finns en annan nfc-enhet i närheten kommer "Tryck här för att överföra" upp.
 
 MainActivity.java
 -------------------------------------------------------------------
 Funktionalitet:
+- Huvudaktivitet
+- Sköter kommunikation
 - Tvinga användaren att sätta på NFC vid start.
-- Kolla om deet finns låsinfo. I så fall visa knapp "lås upp" annars inställningar.
--Stor lås-upp-knapp och inställningar-knapp.
--Eventuelt någon lampa som talar om om det finns lås inom radien.
+- Knapp till inställningar.
 
-
-
-
-
-SuccesActivity.java
+SuccessActivity.java
 -------------------------------------------------------------------
-Här visas om det gick eller inte. Eventuelt felmddelande.
+Om det har skett en lyckad upplåsning startar SuccessActivity
 
 
 FailActivity.java
 -------------------------------------------------------------------
-Fel
-Ger felmeddelande
+Om det inte går att låsa upp låset startar FailActivity + felkod
 
 
 SettingsActivity.java
-------------------------------------------------------------------
-Alla möjliga tänkbara inställningar
+-------------------------------------------------------------------
+Inställningsmeny
+
+
+PasswordActivity.java
+-------------------------------------------------------------------
+Aktivitet för att välja och byta lösenord
+
+
+
+
