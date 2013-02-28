@@ -12,31 +12,32 @@ import android.provider.Settings;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.view.*;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.view.Menu;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity implements CreateNdefMessageCallback {
 
-	// ndefmessage strings
 	private String latestRecievedMsg;
 	private NFCPMessage nfcpMessage;
-
-	// test
-	private Boolean passflag = false;
-
+	private final long TIMEOUT = 60 *1000;//GONE IN 60seconds
+	private Long loginTime;
 	// Objekt som representerar NFC adaptern
 	private NfcAdapter nfcAdapter;
 
 	@SuppressLint("NewApi")
 	@Override
 	/**
-	 * This function is lanched when the app is started.
+	 * Force user to start NFC and Android Beam. Enables callback.
 	 */
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-
+	    setContentView(R.layout.activity_main);
+		
+		
 		// Får tag i ett objekt som representerar NFC-adaptern
 		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
@@ -56,79 +57,81 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 		nfcAdapter.setNdefPushMessageCallback(this, this);
 	}
 
-	/** Called when the user clicks the Settings button */
+	/**
+	 *  Called when the user clicks the Settings button 
+	 *  
+	 */
 	public void settingsAct(View view) {
-
-		Intent intent = new Intent(this, SettingsActivity.class);
-		startActivity(intent);
+		startActivity(new Intent(this, SettingsActivity.class));
 	}
 
+	/**
+	 * Because we don't want anything to happen when we click optionsbutton.
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		// getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
 
 	@Override
 	public void onPause() {
-
 		super.onPause();
-
-		// nfcAdapter.disableForegroundDispatch(this);
-
+		////////////////////////////////DEBUG//////////////////////////////
+		Toast.makeText(this, "onPause", 1).show();
+		///////////////////////////////////////////////////////////////////
 	}
-
+	/**
+	 * Get LoginTime. Check if you have to login again.
+	 */
 	@Override
 	public void onResume() {
 		super.onResume();
+		////////////////////////////DEBUG////////////////////////////////////////////
+		Toast.makeText(this, "onResume", 1).show();
+		/////////////////////////////////////////////////////////////////////////////
 
-		// Check to see that the Activity started due to an Android Beam
-		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
-			processIntent(getIntent());
+		// Get the between instance stored values
+		SharedPreferences pre = getSharedPreferences("login", 1);
+		//logintime blir login eller 0 om inget värde finns!
+		loginTime = pre.getLong("login", 0L);
+		
+		if((System.currentTimeMillis()-loginTime) > TIMEOUT){
+			startActivity(new Intent(this,LoginActivity.class));
+			Toast.makeText(this, "TIMEOUT: PLEASE LOG IN AGAIN", 1).show();
+			finish();
+		}else if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
+				processIntent(getIntent());
 		}
-
 	}
 
 	/**
-	 * Receives ALL INTENTS
+	 * Receives NFC-intents and displays them in view. Called from above.
 	 * 
 	 * @param intent
 	 */
 	void processIntent(Intent intent) {
-
-		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
-
 			setMessage(getLastestNFCMessage(intent));
 			nfcpMessage = new NFCPMessage(latestRecievedMsg);
-
 			if (nfcpMessage.getStatus() && nfcpMessage.getType() == 3) {
-				startActivity(new Intent(MainActivity.this,
-						AccessActivity.class));
+				
+				startActivity(new Intent(this,AccessActivity.class));
+				
 			} else if (!nfcpMessage.getStatus() && nfcpMessage.getType() == 3) {
 				// NOT NFC ACCESS
-				Intent deniedIntent = new Intent(MainActivity.this,
+				Intent deniedIntent = new Intent(this,
 						DeniedActivity.class);
 				deniedIntent.putExtra("ErrorCode", nfcpMessage.getErrorCode());
 				startActivity(deniedIntent);
 				nfcpMessage.clear();
 			}
-
 			getIntent().setAction("");
-		} else {
-			setMessage("FUNKAR SOM DET SKA");
-		}
 	}
 
 	@Override
-	public void onNewIntent(Intent intent) {
-		// onResume gets called after this to handle the intent
-		Toast.makeText(this, "FRAMME", Toast.LENGTH_SHORT).show();
-		setIntent(intent);
-	}
-
-	@SuppressLint("NewApi")
-	@Override
+	/**
+	 * NDEF message handler
+	 * much debug here. In futher add cases and delete cases.
+	 */
 	public NdefMessage createNdefMessage(NfcEvent event) {
 		NFCPMessage sendMsg = null;
 
@@ -158,14 +161,12 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 			// allt går fel
 		}
 
-		NdefMessage msg;
-
+		
 		NdefRecord record = new NdefRecord(NdefRecord.TNF_MIME_MEDIA,
 				"text/plain".getBytes(Charset.forName("US-ASCII")),
 				new byte[0], sendMsg.toString().getBytes(
 						Charset.forName("US-ASCII")));
-		msg = new NdefMessage(new NdefRecord[] { record });
-		return msg;
+		return new NdefMessage(new NdefRecord[] { record });
 	}
 
 	/**
@@ -181,7 +182,6 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 		NdefMessage msg = (NdefMessage) rawMsgs[0];
 		return latestRecievedMsg = new String(msg.getRecords()[0].getPayload());
 		// record 0 contains the MIME type, record 1 is the AAR, if present
-
 	}
 
 	/**
@@ -194,5 +194,4 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 		TextView view = (TextView) findViewById(R.id.message);
 		view.setText(s + "\n");
 	}
-
 }

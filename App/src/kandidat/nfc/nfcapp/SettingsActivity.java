@@ -19,7 +19,11 @@ public class SettingsActivity extends Activity {
 	}
 
 	
-
+	/*
+	 * Android put this here. Whatta fuck is it!?
+	 * (non-Javadoc)
+	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {

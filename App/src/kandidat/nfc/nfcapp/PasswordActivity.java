@@ -2,13 +2,9 @@ package kandidat.nfc.nfcapp;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
-import android.text.Editable;
-import android.text.Selection;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -45,10 +41,10 @@ public class PasswordActivity extends Activity {
 
 		} else {
 
-			int password = Integer.parseInt(stringpw1);
+			long password = Long.parseLong(stringpw1);
 			
 			//passwords match
-			if (password == Integer.parseInt(stringpw2)) {
+			if (password == Long.parseLong(stringpw2)) {
 				
 				//password too short?
 				if(stringpw1.length() < 4){
