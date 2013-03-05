@@ -7,8 +7,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -25,7 +23,7 @@ public class PasswordActivity extends Activity {
 		String storedpw = pref.getString("password", "");
 
 		// If we don't have a saved password we don't want to show
-		// "typ in old pw"
+		// "type in da old pw"
 		if (storedpw.equals("")) {
 			oldPassword.setVisibility(View.GONE);
 		}
@@ -62,6 +60,7 @@ public class PasswordActivity extends Activity {
 					toast.show();
 				} else {
 					setNewPassword(pw1);
+					finish();
 				}
 			} else {
 				toast.setText("Passwords didn't match");
