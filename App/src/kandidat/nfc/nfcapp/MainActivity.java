@@ -91,15 +91,16 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 		/////////////////////////////////////////////////////////////////////////////
 
 		// Get the between instance stored values
-		SharedPreferences pre = getSharedPreferences("login", 1);
+	//	SharedPreferences pre = getSharedPreferences("login", 1);
 		//logintime blir login eller 0 om inget värde finns!
-		loginTime = pre.getLong("login", 0L);
+	//	loginTime = pre.getLong("login", 0L);
 		
-		if((System.currentTimeMillis()-loginTime) > TIMEOUT){
-			startActivity(new Intent(this,LoginActivity.class));
-			Toast.makeText(this, "TIMEOUT: PLEASE LOG IN AGAIN", 1).show();
-			finish();
-		}else if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
+	//	if((System.currentTimeMillis()-loginTime) > TIMEOUT){
+	//		startActivity(new Intent(this,LoginActivity.class));
+	//		Toast.makeText(this, "TIMEOUT: PLEASE LOG IN AGAIN", 1).show();
+	//		finish();
+	//	}else
+		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
 				processIntent(getIntent());
 		}
 	}
@@ -112,11 +113,12 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	void processIntent(Intent intent) {
 			setMessage(getLastestNFCMessage(intent));
 			nfcpMessage = new NFCPMessage(latestRecievedMsg);
-			if (nfcpMessage.getStatus() && nfcpMessage.getType() == 3) {
+			//status 0 inga fel!!!!
+			if (nfcpMessage.getStatus().equals("0") && nfcpMessage.getType().equals("3")) {
 				
 				startActivity(new Intent(this,AccessActivity.class));
 				
-			} else if (!nfcpMessage.getStatus() && nfcpMessage.getType() == 3) {
+			} else if (nfcpMessage.getStatus().equals("1") && nfcpMessage.getType().equals("3")) {
 				// NOT NFC ACCESS
 				Intent deniedIntent = new Intent(this,
 						DeniedActivity.class);
@@ -139,21 +141,21 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 			// return null;
 
 			// testing
-			sendMsg = new NFCPMessage("NFC", 1, true, 1, 0);
+			sendMsg = new NFCPMessage("TE","01","0", "1","0", "Anna");
 
-		} else if (nfcpMessage.getType() == 1) {
+		} else if (nfcpMessage.getType().equals("1")) {
 
 			// skicka typ 2 meddelande
 
-			sendMsg = new NFCPMessage("NFC", 1, 2, 1234);
+			sendMsg = new NFCPMessage("TE", "01", "0","2","0", "Anna");
 
-		} else if (nfcpMessage.getType() == 2) {
+		} else if (nfcpMessage.getType().equals("2")) {
 			// testkod för att ta emot meddelande typ 2
 
 			// skicka meddelande typ 3
-			sendMsg = new NFCPMessage("NFC", 1, true, 3, 0);
+			sendMsg = new NFCPMessage("TE", "01", "0", "3","0", "Anna");
 
-		} else if (nfcpMessage.getType() == 3) {
+		} else if (nfcpMessage.getType().equals("3")) {
 			// att göra när vi tar emot meddelande typ 3
 			return null;
 

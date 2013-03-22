@@ -4,84 +4,74 @@ import java.util.Scanner;
 
 public class NFCPMessage {
 
-	private String name ="";
-	private int id =0;
-	private int typeOfMessage=0;
-	private int key=0;
-	private boolean status=false;
-	private int errorCode=0;
+	private String name; //2 bytes alltså två ASCII-tecken
+	private String id; //2 bytes alltså två ASCII-tecken
+	private String typeOfMessage; //1 byte
+	private String userID; //4 bytes
+	private String status;//1 byte
+	private String errorCode;//1 byte
 	
 	
 	//Constructor Type1 and Type3 Message
-	public NFCPMessage(String name, int id, boolean status, int typeOfMessage,
-			int errorCode) {
-		super();
+	public NFCPMessage(String name, String id, String status, String typeOfMessage,
+			String errorCode,String userID) {
+		//super();
 		this.name = name;
 		this.id = id;
 		this.status = status;
 		this.typeOfMessage= typeOfMessage;
 		this.errorCode = errorCode;
+		this.userID =userID;
 	}
 	
 	//Constructor Type2 Message
-	public NFCPMessage(String name, int id, int typeOfMessage, int key) {
-		super();
+	public NFCPMessage(String name, String id, String typeOfMessage, String key) {
+		//super();
 		this.name = name;
 		this.id = id;
 		this.typeOfMessage = typeOfMessage;
-		this.key = key;
+		this.userID = key;
 	}
 	
 	//Constructor for received Strings
 	public NFCPMessage(String s){
-		Scanner sc = new Scanner(s);
-			name = sc.nextLine();
-			sc.next();
-			id = sc.nextInt();
-			sc.next();
-			typeOfMessage = sc.nextInt();
-			sc.next();
-			key = sc.nextInt();
-			sc.next();
-			status = sc.nextBoolean();
-			sc.next();
-			errorCode = sc.nextInt();
+		//TODO HEX TO Message
 		
 	}
 	
 	public void clear(){
 		name ="";
-		id =0;
-		typeOfMessage=0;
-		key=0;
-		status=false;
-		errorCode=0;
+		id ="";
+		typeOfMessage="";
+		userID="";
+		status="";
+		errorCode="";
 		
 	}
 	
 	@Override
 	public String toString(){
 		
-		String protocolTemplate =name+ "\n" +
-				"Låsid: "+id+"\n" +
-				"Typ: "+typeOfMessage+ "\n" +
-				"Nyckel: "+key + "\n" +
-				"Status: "+status+ "\n" +
-				"Felkod: "+errorCode;
+		String string = name +
+						id +
+						typeOfMessage+ 
+						status +
+						errorCode+
+						userID;
 		
-		return protocolTemplate;
+		return string;
 		
 	}
 
-	public int getType(){
+	public String getType(){
 		return typeOfMessage;
 }
 
-	public boolean getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public int getErrorCode() {
+	public String getErrorCode() {
 		return errorCode;
 	}
 	
