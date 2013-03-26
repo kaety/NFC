@@ -28,13 +28,13 @@ public class DAO {
 		if(isUpdate == null){
 			database.execSQL("INSERT INTO " + DBHelper.DATABASE_TABLE_NAME + " VALUES ('" + lockID + "', '" + unlockID + "')");
 		}else{
-			//TODO update 
+			database.execSQL("UPDATE " + DBHelper.DATABASE_TABLE_NAME + " SET " + DBHelper.COLUMN_2 + " = '" + unlockID + "' ");
 		}
 	 }
 
 	 public void delete(String lockID) {
 		//database.beginTransaction();
-	    database.execSQL("DELETE FROM " + DBHelper.DATABASE_TABLE_NAME + " WHERE " + DBHelper.COLUMN_1 + " = " + lockID);
+	    database.execSQL("DELETE FROM " + DBHelper.DATABASE_TABLE_NAME + " WHERE " + DBHelper.COLUMN_1 + " = '" + lockID + "'");
 		//database.endTransaction();
 	  }
 	 
