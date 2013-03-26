@@ -10,5 +10,8 @@
     <string name="access_denied">ACCESS DENIED</string>
     <string name="title_activity_login">LåsAppen</string>
     <string name="title_activity_settings">LåsAppen</string>
+    <string name="title_activity_keys">KeysActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

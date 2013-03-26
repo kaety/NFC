@@ -43,4 +43,7 @@ public class SettingsActivity extends Activity {
 	public void toPassword(View view){
 		startActivity(new Intent(this,PasswordActivity.class));
 	}
+	public void toKeys(View view){
+		startActivity(new Intent(this,KeysActivity.class));
+	}
 }

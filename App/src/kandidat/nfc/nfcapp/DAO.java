@@ -15,7 +15,7 @@ public class DAO {
 		dbHelper = new DBHelper(context);
 	}
 	public void open() throws SQLException {
-	    database = dbHelper.getWritableDatabase();
+		database = dbHelper.getWritableDatabase();
 	}
 	
 	public void close() {
@@ -24,28 +24,34 @@ public class DAO {
 	
 
 	public void insert(String lockID, String unlockID) {
-		open();
-		database.beginTransaction();
-		database.execSQL("INSERT INTO " + DBHelper.DATABASE_TABLE_NAME + "VALUES (" + lockID + ", " + unlockID + ")");
-		database.endTransaction();
-		close();
+		String isUpdate = get(lockID);
+		if(isUpdate == null){
+			database.execSQL("INSERT INTO " + DBHelper.DATABASE_TABLE_NAME + " VALUES ('" + lockID + "', '" + unlockID + "')");
+		}else{
+			//TODO update 
+		}
 	 }
 
 	 public void delete(String lockID) {
-		open();
-		database.beginTransaction();
+		//database.beginTransaction();
 	    database.execSQL("DELETE FROM " + DBHelper.DATABASE_TABLE_NAME + " WHERE " + DBHelper.COLUMN_1 + " = " + lockID);
-		database.endTransaction();
-		close();
+		//database.endTransaction();
 	  }
 	 
 	 public String get(String lockID) {
-		 String select = "SELECT " + DBHelper.COLUMN_1 + " FROM " + DBHelper.DATABASE_TABLE_NAME + " WHERE " + DBHelper.COLUMN_1 + " = '" + lockID + "'";
+		 String select = "SELECT " + DBHelper.COLUMN_2 + " FROM " + DBHelper.DATABASE_TABLE_NAME + " WHERE " + DBHelper.COLUMN_1 + " = '" + lockID + "'";
 		 Cursor c = database.rawQuery(select, null);
-		 c.moveToFirst();
-		 String result = c.getString(1);
-		 c.close();
-		 return result;
+		 if(c.getCount() == 0){
+			 return null;
+		 }
+		 try{
+			 c.moveToFirst();
+			 String result = c.getString(0);
+			 c.close();
+			 return result;
+		 }catch(Exception e){
+			 return null;
+		 }
 	 }
 	 
 	 public void modify(String lockID, String unlockID){
