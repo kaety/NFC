@@ -2,11 +2,26 @@ package kandidat.nfc.nfcapp;
 
 public class NFCPMessage {
 
+	//The three types of message
+	public static final String MESSAGE_TYPE_BEACON = "1";
+	public static final String MESSAGE_TYPE_UNLOCK = "2";
+	public static final String MESSAGE_TYPE_RESULT = "3";
+	
+	//Different status
+	public static final String STATUS_OK = "0";
+	public static final String STATUS_ERROR = "1";
+	
+	//Errors codes
+	public static final String ERROR_NONE = "0";
+	
+	
+	
+	//Fields
 	private String name; //2 bytes alltså två ASCII-tecken
 	private String id; //2 bytes alltså två ASCII-tecken
 	private String typeOfMessage; //1 byte
 	private String status;//1 byte
-	private String errorCode;//1 byte
+	private String errorCode;//1 byte //Only checked if status = "1"
 	private String unlockID; //4 bytes
 	
 	
@@ -68,5 +83,13 @@ public class NFCPMessage {
 	public String getErrorCode() {
 		return errorCode;
 	}
-	
+	public String getUniqueId(){
+		return name + id;
+	}
+	public String getName(){
+		return name;
+	}
+	public String getId(){
+		return id;
+	}
 }

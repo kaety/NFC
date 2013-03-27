@@ -28,14 +28,14 @@ public class DAO {
 		if(isUpdate == null){
 			database.execSQL("INSERT INTO " + DBHelper.DATABASE_TABLE_NAME + " VALUES ('" + lockID + "', '" + unlockID + "')");
 		}else{
-			database.execSQL("UPDATE " + DBHelper.DATABASE_TABLE_NAME + " SET " + DBHelper.COLUMN_2 + " = '" + unlockID + "' ");
+			database.execSQL("UPDATE " + DBHelper.DATABASE_TABLE_NAME + " SET " + DBHelper.COLUMN_2 + " = '" + unlockID + "' WHERE " +
+					DBHelper.COLUMN_1 + " = '" + lockID + "'");
 		}
 	 }
 
+	//Not needed => Not tested yet
 	 public void delete(String lockID) {
-		//database.beginTransaction();
 	    database.execSQL("DELETE FROM " + DBHelper.DATABASE_TABLE_NAME + " WHERE " + DBHelper.COLUMN_1 + " = '" + lockID + "'");
-		//database.endTransaction();
 	  }
 	 
 	 public String get(String lockID) {
@@ -52,9 +52,5 @@ public class DAO {
 		 }catch(Exception e){
 			 return null;
 		 }
-	 }
-	 
-	 public void modify(String lockID, String unlockID){
-		 
 	 }
 }

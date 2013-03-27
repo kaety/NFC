@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.support.v4.app.NavUtils;
 
@@ -54,12 +55,18 @@ public class KeysActivity extends Activity {
 	
 	/////////////////////Buttons///////////////////////////////////////////////////////
 	public void createOrChange(View v){
-		dao.insert("TE01","Anna");
+		EditText e1 = (EditText) findViewById(R.id.editText1);
+		EditText e2 = (EditText) findViewById(R.id.editText2);
+		String lockID = e1.getText().toString();
+	    String unlockID = e2.getText().toString();
+		dao.insert(lockID,unlockID);
 	}
 	public void search(View v){
-		String s = dao.get("TE01");
+		EditText e1 = (EditText) findViewById(R.id.editText1);
+		String lockID = e1.getText().toString();
+		String s = dao.get(lockID);
 		TextView tv =(TextView) findViewById(R.id.textView1);
-		tv.setText(s);
+		tv.setText("The key is:\n" + s);
 	}
 	public void finish(View v){
 		finish();

@@ -28,6 +28,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	private Long loginTime;
 	// Objekt som representerar NFC adaptern
 	private NfcAdapter nfcAdapter;
+	private DAO dao = new DAO(this);
 
 	@SuppressLint("NewApi")
 	@Override
@@ -56,6 +57,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 		}
 
 		nfcAdapter.setNdefPushMessageCallback(this, this);
+		dao.open();
 	}
 
 	/**
@@ -77,9 +79,12 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	@Override
 	public void onPause() {
 		super.onPause();
+		
 		////////////////////////////////DEBUG//////////////////////////////
-		Toast.makeText(this, "onPause", 1).show();
+		//Toast.makeText(this, "onPause", 1).show();
 		///////////////////////////////////////////////////////////////////
+		
+		dao.close();
 	}
 	/**
 	 * Get LoginTime. Check if you have to login again.
@@ -87,8 +92,9 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	@Override
 	public void onResume() {
 		super.onResume();
+		
 		////////////////////////////DEBUG////////////////////////////////////////////
-		Toast.makeText(this, "onResume", 1).show();
+		//Toast.makeText(this, "onResume", 1).show();
 		/////////////////////////////////////////////////////////////////////////////
 
 		// Get the between instance stored values
@@ -114,12 +120,12 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	void processIntent(Intent intent) {
 			setMessage(getLastestNFCMessage(intent));
 			nfcpMessage = new NFCPMessage(latestRecievedMsg);
-			//status 0 inga fel!!!!
-			if (nfcpMessage.getStatus().equals("0") && nfcpMessage.getType().equals("3")) {
+
+			if (nfcpMessage.getStatus().equals(NFCPMessage.STATUS_OK) && nfcpMessage.getType().equals(NFCPMessage.MESSAGE_TYPE_RESULT)) {
 				
 				startActivity(new Intent(this,AccessActivity.class));
 				
-			} else if (nfcpMessage.getStatus().equals("1") && nfcpMessage.getType().equals("3")) {
+			} else if (nfcpMessage.getStatus().equals(NFCPMessage.STATUS_ERROR) && nfcpMessage.getType().equals(NFCPMessage.MESSAGE_TYPE_RESULT)) {
 				// NOT NFC ACCESS
 				Intent deniedIntent = new Intent(this,
 						DeniedActivity.class);
@@ -136,32 +142,54 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	 * much debug here. In futher add cases and delete cases.
 	 */
 	public NdefMessage createNdefMessage(NfcEvent event) {
+		
 		NFCPMessage sendMsg = null;
 
-		if (nfcpMessage == null) {
-			// return null;
+		if (nfcpMessage == null) { //If no message has been received. This should be done by controller but is here for debugging purpose.
+			
+			sendMsg = new NFCPMessage("TE","01",NFCPMessage.STATUS_OK, NFCPMessage.MESSAGE_TYPE_BEACON,NFCPMessage.ERROR_NONE, "Anna");
+			
+		} else if (nfcpMessage.getType().equals(NFCPMessage.MESSAGE_TYPE_BEACON)) {
+			
+			//Check if key is in database
+			String unlockId = dao.get(nfcpMessage.getUniqueId());
+			
+			if(unlockId != null){ //If a key exists in the Database send unlock message(type 2)
+				
+				sendMsg = new NFCPMessage(nfcpMessage.getName(), nfcpMessage.getId(),
+						NFCPMessage.STATUS_OK,NFCPMessage.MESSAGE_TYPE_UNLOCK,NFCPMessage.ERROR_NONE, unlockId);
+			
+			} else {
+				//Can't toast in automatic handler so we have to run in UI-thread
+				runOnUiThread(new Runnable() {
+		            @Override
+		            public void run() {
+		            	Toast.makeText(MainActivity.this,"The Database contains no key for this door",Toast.LENGTH_LONG).show();
+		            }
+		        });
+				return null;		
+			
+			}
+			
+		} else if (nfcpMessage.getType().equals(NFCPMessage.MESSAGE_TYPE_UNLOCK)) { //If message is of type 2(unlock command). Here only for debugging. Should be handled by controller.
 
-			// testing
-			sendMsg = new NFCPMessage("TE","01","0", "1","0", "Anna");
+			sendMsg = new NFCPMessage("TE", "01", NFCPMessage.STATUS_OK, NFCPMessage.MESSAGE_TYPE_RESULT,NFCPMessage.ERROR_NONE, "Anna");
 
-		} else if (nfcpMessage.getType().equals("1")) {
-
-			// skicka typ 2 meddelande
-
-			sendMsg = new NFCPMessage("TE", "01", "0","2","0", "Anna");
-
-		} else if (nfcpMessage.getType().equals("2")) {
-			// testkod för att ta emot meddelande typ 2
-
-			// skicka meddelande typ 3
-			sendMsg = new NFCPMessage("TE", "01", "0", "3","0", "Anna");
-
-		} else if (nfcpMessage.getType().equals("3")) {
-			// att göra när vi tar emot meddelande typ 3
+		} else if (nfcpMessage.getType().equals(NFCPMessage.MESSAGE_TYPE_RESULT)) { //If latest received is of type 3 we should check the result
+			
 			return null;
 
-		} else {
-			// allt går fel
+		} else {			// Should never happen because there is only 3 types.
+			
+			//Can't toast in automatic handler so we have to run in UI-thread
+			runOnUiThread(new Runnable() {
+	            @Override
+	            public void run() {
+	            	Toast.makeText(MainActivity.this, "Illegal message type", Toast.LENGTH_SHORT).show();
+	            }
+	        });
+			return null;
+		
 		}
 
 		
@@ -193,8 +221,9 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	 * @param s
 	 */
 	public void setMessage(String s) {
-		// Toast.makeText(this, latestRecievedMsg, Toast.LENGTH_LONG).show();
+
 		TextView view = (TextView) findViewById(R.id.message);
 		view.setText(s + "\n");
+		
 	}
 }
