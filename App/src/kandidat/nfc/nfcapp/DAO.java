@@ -1,6 +1,5 @@
 package kandidat.nfc.nfcapp;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -9,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 public class DAO {
 	private SQLiteDatabase database;
 	private DBHelper dbHelper;
-	private String[] allColumns = {DBHelper.COLUMN_1,DBHelper.COLUMN_2};
 	
 	public DAO(Context context){
 		dbHelper = new DBHelper(context);

@@ -14,7 +14,7 @@ public class AccessActivity extends Activity {
       //user.  
     private final int SPLASHTIME = 2500;  
   
-    //handler for splash screen  
+    //handler for splash screen. Should NOT be static
     private Handler splashHandler = new Handler() {  
          @Override  
          public void handleMessage(Message msg) {  

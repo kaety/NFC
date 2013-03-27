@@ -16,7 +16,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="26dp"
         android:ems="10"
-        android:hint="Which door?" />
+        android:hint="Which door?"
+        android:maxLength="4" />
 
     <EditText
         android:id="@+id/editText2"
@@ -25,7 +26,8 @@
         android:layout_below="@+id/editText1"
         android:layout_centerHorizontal="true"
         android:ems="10"
-        android:hint="The key..." >
+        android:hint="The key..."
+        android:maxLength="4" >
 
         <requestFocus />
     </EditText>

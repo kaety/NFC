@@ -23,6 +23,7 @@ public class NFCPMessage {
 	private String status;//1 byte
 	private String errorCode;//1 byte //Only checked if status = "1"
 	private String unlockID; //4 bytes
+	private String publicKey; //This will be added if message is of type 1
 	
 	
 	//Constructor Type1 and Type3 Message
@@ -91,5 +92,11 @@ public class NFCPMessage {
 	}
 	public String getId(){
 		return id;
+	}
+	public String getPublicKey(){
+		return publicKey;
+	}
+	public void setPublicKey(String publicKey){
+		this.publicKey = publicKey;
 	}
 }
