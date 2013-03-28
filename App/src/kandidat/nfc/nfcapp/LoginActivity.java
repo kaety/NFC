@@ -1,5 +1,8 @@
 package kandidat.nfc.nfcapp;
 
+import java.util.logging.Logger;
+
+import android.nfc.security.Krypto;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.app.Activity;
@@ -7,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
@@ -41,6 +45,8 @@ public class LoginActivity extends Activity{
 			startActivity(i);
 			finish();
 		}
+		
+		
 	}
 
 
