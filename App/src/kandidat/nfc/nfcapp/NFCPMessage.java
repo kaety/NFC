@@ -25,7 +25,7 @@ public class NFCPMessage {
 	private String typeOfMessage; //1 byte
 	private String status;//1 byte
 	private String errorCode;//1 byte //Only checked if status = "1"
-	private String unlockID; //4 bytes
+	private String unlockId; //4 bytes
 	private String publicKey; //This will be added if message is of type 1
 	
 	
@@ -37,7 +37,8 @@ public class NFCPMessage {
 		this.status = status;
 		this.typeOfMessage= typeOfMessage;
 		this.errorCode = errorCode;
-		this.unlockID =userID;
+		this.unlockId =userID;
+		this.publicKey = null;
 	}
 	
 	/**
@@ -45,13 +46,16 @@ public class NFCPMessage {
 	 * @param s raw message
 	 */
 	public NFCPMessage(String s){
-		if (s.length() == 11){
+		if (s.length() >= 11){
 			name = s.substring(0, 2); //2 bytes alltså två ASCII-tecken
 			id = s.substring(2, 4); //2 bytes alltså två ASCII-tecken
 			typeOfMessage = s.substring(4, 5); //1 byte
 			status = s.substring(5,6);//1 byte
 			errorCode = s.substring(6, 7);
-			unlockID = s.substring(7, 11); //4 bytes
+			unlockId = s.substring(7, 11); //4 bytes
+			if(s.length() > 11){
+				publicKey = s.substring(11);
+			}
 		}
 	}
 	
@@ -61,7 +65,7 @@ public class NFCPMessage {
 		typeOfMessage="";
 		status="";
 		errorCode="";
-		unlockID="";
+		unlockId="";
 	}
 	
 	@Override
@@ -72,7 +76,8 @@ public class NFCPMessage {
 				typeOfMessage + 
 				status +
 				errorCode +
-				unlockID;
+				unlockId +
+				publicKey;
 		
 	}
 
@@ -104,6 +109,11 @@ public class NFCPMessage {
 	}
 
 	public String getUnlockId() {
-		return unlockID;
+		return unlockId;
 	}
+
+	public void setUnlockId(String unlockId) {
+		this.unlockId = unlockId;
+	}
+	
 }

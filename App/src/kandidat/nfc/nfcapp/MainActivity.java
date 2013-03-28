@@ -6,12 +6,14 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcAdapter.CreateNdefMessageCallback;
 import android.nfc.NfcEvent;
+import android.nfc.security.Krypto;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
@@ -26,6 +28,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	// Objekt som representerar NFC adaptern
 	private NfcAdapter nfcAdapter;
 	private DAO dao = new DAO(this);
+	private Krypto krypto = null;
 
 	@SuppressLint("NewApi")
 	@Override
@@ -117,20 +120,36 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	void processIntent(Intent intent) {
 			setMessage(getLastestNFCMessage(intent));
 			nfcpMessage = new NFCPMessage(latestRecievedMsg);
-
-			if (nfcpMessage.getStatus().equals(NFCPMessage.STATUS_OK) && nfcpMessage.getType().equals(NFCPMessage.MESSAGE_TYPE_RESULT)) {
+			String status = nfcpMessage.getStatus();
+			String type = nfcpMessage.getType();
+			if(type.equals(NFCPMessage.MESSAGE_TYPE_RESULT)){
+				if (status.equals(NFCPMessage.STATUS_OK)) {
 				
-				startActivity(new Intent(this,AccessActivity.class));
+					startActivity(new Intent(this,AccessActivity.class));
 				
-			} else if (nfcpMessage.getStatus().equals(NFCPMessage.STATUS_ERROR) && nfcpMessage.getType().equals(NFCPMessage.MESSAGE_TYPE_RESULT)) {
-				// NOT NFC ACCESS
-				Intent deniedIntent = new Intent(this,
-						DeniedActivity.class);
-				deniedIntent.putExtra("ErrorCode", nfcpMessage.getErrorCode());
-				startActivity(deniedIntent);
-				nfcpMessage.clear();
-			} else if(nfcpMessage.getType().equals(NFCPMessage.MESSAGE_TYPE_SHARE)){
-				dao.insert(nfcpMessage.getUniqueId(), nfcpMessage.getUnlockId());
+				} else if (status.equals(NFCPMessage.STATUS_ERROR)) {
+					// NOT NFC ACCESS
+					Intent deniedIntent = new Intent(this,DeniedActivity.class);
+					deniedIntent.putExtra("ErrorCode", nfcpMessage.getErrorCode());
+					startActivity(deniedIntent);
+					nfcpMessage.clear();
+				}
+			}else if(type.equals(NFCPMessage.MESSAGE_TYPE_SHARE)){
+				Toast.makeText(this,nfcpMessage.getUnlockId() , Toast.LENGTH_LONG);
+				////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				String unlockId = krypto.decryptMessage(nfcpMessage.getUnlockId());
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				//insert into Database
+				dao.insert(nfcpMessage.getUniqueId(), unlockId);
+			}else if(type.equals(NFCPMessage.MESSAGE_TYPE_BEACON)){
+				
+				//Save latest received publicKey to encrypt with
+				Editor editor = getSharedPreferences("publicKey", 0).edit();
+				editor.putString("publicKey", nfcpMessage.getPublicKey());
+				editor.commit();
+				
 			}
 			getIntent().setAction("");
 	}
@@ -144,9 +163,13 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 		
 		NFCPMessage sendMsg = null;
 
-		if (nfcpMessage == null) { //If no message has been received. This should be done by controller but is here for debugging purpose.
+		if (nfcpMessage == null) { //If no message has been received.
 			
-			sendMsg = new NFCPMessage("TE","01",NFCPMessage.STATUS_OK, NFCPMessage.MESSAGE_TYPE_BEACON,NFCPMessage.ERROR_NONE, "Anna");
+			krypto = new Krypto();
+			String publicKey = krypto.publicKeyToString();
+			sendMsg = new NFCPMessage("TE","01",NFCPMessage.STATUS_OK, NFCPMessage.MESSAGE_TYPE_BEACON,
+					NFCPMessage.ERROR_NONE, "Anna");
+			sendMsg.setPublicKey(publicKey);
 			
 		} else if (nfcpMessage.getType().equals(NFCPMessage.MESSAGE_TYPE_BEACON)) {
 			
@@ -156,14 +179,16 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 			if(unlockId != null){ //If a key exists in the Database send unlock message(type 2)
 				
 				sendMsg = new NFCPMessage(nfcpMessage.getName(), nfcpMessage.getId(),
-						NFCPMessage.STATUS_OK,NFCPMessage.MESSAGE_TYPE_UNLOCK,NFCPMessage.ERROR_NONE, unlockId);
+						NFCPMessage.STATUS_OK,NFCPMessage.MESSAGE_TYPE_UNLOCK,NFCPMessage.ERROR_NONE,
+						unlockId);
 			
 			} else {
 				//Can't toast in automatic handler so we have to run in UI-thread
 				runOnUiThread(new Runnable() {
 		            @Override
 		            public void run() {
-		            	Toast.makeText(MainActivity.this,"The Database contains no key for this door",Toast.LENGTH_LONG).show();
+		            	Toast.makeText(MainActivity.this,"The Database contains no key for this door",
+		            			Toast.LENGTH_LONG).show();
 		            }
 		        });
 				return null;		
@@ -172,7 +197,8 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 			
 		} else if (nfcpMessage.getType().equals(NFCPMessage.MESSAGE_TYPE_UNLOCK)) { //If message is of type 2(unlock command). Here only for debugging. Should be handled by controller.
 
-			sendMsg = new NFCPMessage("TE", "01", NFCPMessage.STATUS_OK, NFCPMessage.MESSAGE_TYPE_RESULT,NFCPMessage.ERROR_NONE, "Anna");
+			sendMsg = new NFCPMessage("TE", "01", NFCPMessage.STATUS_OK,
+					NFCPMessage.MESSAGE_TYPE_RESULT,NFCPMessage.ERROR_NONE, "Anna");
 
 		} else if (nfcpMessage.getType().equals(NFCPMessage.MESSAGE_TYPE_RESULT)) { //If latest received is of type 3 we should check the result
 			
