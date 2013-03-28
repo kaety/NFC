@@ -6,13 +6,16 @@ public class NFCPMessage {
 	public static final String MESSAGE_TYPE_BEACON = "1";
 	public static final String MESSAGE_TYPE_UNLOCK = "2";
 	public static final String MESSAGE_TYPE_RESULT = "3";
+	public static final String MESSAGE_TYPE_SHARE = "4";
 	
 	//Different status
 	public static final String STATUS_OK = "0";
 	public static final String STATUS_ERROR = "1";
 	
+	
 	//Errors codes
 	public static final String ERROR_NONE = "0";
+	
 	
 	
 	
@@ -98,5 +101,9 @@ public class NFCPMessage {
 	}
 	public void setPublicKey(String publicKey){
 		this.publicKey = publicKey;
+	}
+
+	public String getUnlockId() {
+		return unlockID;
 	}
 }

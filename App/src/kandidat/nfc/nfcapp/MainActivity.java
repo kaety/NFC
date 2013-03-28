@@ -129,6 +129,8 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 				deniedIntent.putExtra("ErrorCode", nfcpMessage.getErrorCode());
 				startActivity(deniedIntent);
 				nfcpMessage.clear();
+			} else if(nfcpMessage.getType().equals(NFCPMessage.MESSAGE_TYPE_SHARE)){
+				dao.insert(nfcpMessage.getUniqueId(), nfcpMessage.getUnlockId());
 			}
 			getIntent().setAction("");
 	}

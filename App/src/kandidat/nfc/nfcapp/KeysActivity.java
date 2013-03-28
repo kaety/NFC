@@ -2,6 +2,7 @@ package kandidat.nfc.nfcapp;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,21 +55,67 @@ public class KeysActivity extends Activity {
 	}
 	
 	/////////////////////Buttons///////////////////////////////////////////////////////
+	/**
+	 * Creates or changes key for given door and key
+	 * @param v
+	 */
 	public void createOrChange(View v){
-		EditText e1 = (EditText) findViewById(R.id.editText1);
-		EditText e2 = (EditText) findViewById(R.id.editText2);
-		String lockID = e1.getText().toString();
-	    String unlockID = e2.getText().toString();
+		
+		String lockID = getLockId();
+	    String unlockID = getUnlockId();
+	    //dao.insert creates or changes if already created
 		dao.insert(lockID,unlockID);
+		
 	}
+	/**
+	 * Searches and displays the key for chosen door
+	 * @param v
+	 */
 	public void search(View v){
+		
+		TextView tv =(TextView) findViewById(R.id.textView1);
+		tv.setText("The key is:\n" + searchForUnlockId());
+		
+	}
+	/**
+	 * Just cancels...
+	 * @param v
+	 */
+	public void finish(View v){
+		
+		finish();
+		
+	}
+	/**
+	 * puts doorName and key in an intent and send to a new activity for sharing via Android Beam
+	 * @param v
+	 */
+	public void share(View v){
+		
+		Intent intent = new Intent(this ,ShareActivity.class);
+		intent.putExtra("doorId",getLockId());
+		intent.putExtra("key",searchForUnlockId());
+		startActivity(intent);
+		
+	}
+	////////////////////////////////////////////////////////////////////////////////////////
+	public String searchForUnlockId(){
+		
 		EditText e1 = (EditText) findViewById(R.id.editText1);
 		String lockID = e1.getText().toString();
-		String s = dao.get(lockID);
-		TextView tv =(TextView) findViewById(R.id.textView1);
-		tv.setText("The key is:\n" + s);
+		return dao.get(lockID);
+	
 	}
-	public void finish(View v){
-		finish();
+	
+	public String getUnlockId(){
+		EditText e1 = (EditText) findViewById(R.id.editText2);
+		return e1.getText().toString();
+	}
+	
+	public String getLockId(){
+	
+		EditText e1 = (EditText) findViewById(R.id.editText1);
+		return e1.getText().toString();
+	
 	}
 }

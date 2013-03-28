@@ -17,6 +17,7 @@
         android:layout_marginTop="26dp"
         android:ems="10"
         android:hint="Which door?"
+        android:inputType="text"
         android:maxLength="4" />
 
     <EditText
@@ -27,6 +28,7 @@
         android:layout_centerHorizontal="true"
         android:ems="10"
         android:hint="The key..."
+        android:inputType="text"
         android:maxLength="4" >
 
         <requestFocus />
@@ -52,17 +54,6 @@
         android:text="Cancel"
         android:onClick="finish" />
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/button1"
-        android:layout_alignBottom="@+id/button1"
-        android:layout_marginRight="26dp"
-        android:layout_toLeftOf="@+id/button3"
-        android:text="Search"
-        android:onClick="search" />
-
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
@@ -72,5 +63,23 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/button1"
         android:text="TextView" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView1"
+        android:layout_toRightOf="@+id/button2"
+        android:text="Share"
+        android:onClick="share" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView1"
+        android:layout_toRightOf="@+id/button1"
+        android:onClick="search"
+        android:text="Search" />
 
 </RelativeLayout>
