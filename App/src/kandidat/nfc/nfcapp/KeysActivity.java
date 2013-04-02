@@ -3,81 +3,101 @@ package kandidat.nfc.nfcapp;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.support.v4.app.NavUtils;
 
+/**
+ * Handles the Database of keys.
+ * Sharing, Creating, Changing
+ * @author Fredrik
+ *
+ */
 public class KeysActivity extends Activity {
 
+	//Database Access Object
 	private DAO dao;
+	private TextView loggerTextView;
 	
+	/**
+	 * Getting a new DAO and prepares it.
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_keys);
-		// Show the Up button in the action bar.
+		
+		//getting a new DAO and prepares it
 		dao = new DAO(this);
 		dao.open();
+		
+		loggerTextView =(TextView) findViewById(R.id.textView1);
+		
 	}
 	
+	/**
+	 * Closes connection to database.
+	 */
 	@Override
-	protected void onPause(){
-		super.onPause();
+	protected void onDestroy(){
+		
+		super.onDestroy();
+
 		dao.close();
+		
 	}
 
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.keys, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			// This ID represents the Home or Up button. In the case of this
-			// activity, the Up button is shown. Use NavUtils to allow users
-			// to navigate up one level in the application structure. For
-			// more details, see the Navigation pattern on Android Design:
-			//
-			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-			//
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
 	
 	/////////////////////Buttons///////////////////////////////////////////////////////
 	/**
-	 * Creates or changes key for given door and key
+	 * Called from Button.
+	 * Creates or changes key for given door and key.
 	 * @param v
 	 */
 	public void createOrChange(View v){
 		
 		String lockID = getLockId();
 	    String unlockID = getUnlockId();
-	    //dao.insert creates or changes if already created
-		dao.insert(lockID,unlockID);
-		
+	    
+	    //Check if all fields have proper length
+	    if(lockID.length() != 4){
+	    	
+	    	loggerTextView.setText("lockId should be a four character String");
+	    	
+	    }else if(unlockID.length() != 4){
+	    	
+	    	loggerTextView.setText("unlockId should be a four character String");
+	    	
+	    }else{
+	    	
+	    	//dao.insert creates or changes if already created
+	    	dao.insert(lockID,unlockID);
+	    	loggerTextView.setText("Keypair stored");
+	    	
+	    }
 	}
 	/**
-	 * Searches and displays the key for chosen door
+	 * Called from button.
+	 * Searches and displays the key for chosen door.
 	 * @param v
 	 */
 	public void search(View v){
 		
-		TextView tv =(TextView) findViewById(R.id.textView1);
-		tv.setText("The key is:\n" + searchForUnlockId());
+		String unlockId = searchForUnlockId();
+		if (unlockId != null){
+			
+			loggerTextView.setText("The key is:\n" + unlockId);
+			
+		}else{
+			
+			loggerTextView.setText("The key is not found");
+			
+		}
 		
 	}
+	
 	/**
+	 * Called from button.
 	 * Just cancels...
 	 * @param v
 	 */
@@ -86,33 +106,52 @@ public class KeysActivity extends Activity {
 		finish();
 		
 	}
+	
 	/**
-	 * puts doorName and key in an intent and send to a new activity for sharing via Android Beam
+	 * Called from button.
+	 * Puts doorName and key in an intent and send to a new activity for sharing via Android Beam.
 	 * @param v
 	 */
 	public void share(View v){
 		
-		Intent intent = new Intent(this ,ShareActivity.class);
-		intent.putExtra("doorId",getLockId());
-		intent.putExtra("key",searchForUnlockId());
-		startActivity(intent);
+		String lockId = getLockId();
+		if(lockId.length() == 4){
+			
+			Intent intent = new Intent(this ,ShareActivity.class);
+			intent.putExtra("doorId",getLockId());
+			intent.putExtra("key",searchForUnlockId());
+			startActivity(intent);
+			
+		}else{
+			loggerTextView.setText("You must supply a four character long doorId");
+		}
 		
 	}
 	////////////////////////////////////////////////////////////////////////////////////////
-	public String searchForUnlockId(){
+	/**
+	 * Private method for extracting info from field and then serch for its unlockId in the Database.
+	 * @return
+	 */
+	private String searchForUnlockId(){
 		
 		EditText e1 = (EditText) findViewById(R.id.editText1);
 		String lockID = e1.getText().toString();
 		return dao.get(lockID);
 	
 	}
-	
-	public String getUnlockId(){
+	/**
+	 * Extracting info from field to
+	 * @return
+	 */
+	private String getUnlockId(){
 		EditText e1 = (EditText) findViewById(R.id.editText2);
 		return e1.getText().toString();
 	}
-	
-	public String getLockId(){
+	/**
+	 * Extracting info from field 1
+	 * @return
+	 */
+	private String getLockId(){
 	
 		EditText e1 = (EditText) findViewById(R.id.editText1);
 		return e1.getText().toString();

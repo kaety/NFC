@@ -15,6 +15,7 @@ public class NFCPMessage {
 	
 	//Errors codes
 	public static final String ERROR_NONE = "0";
+	public static final String ERROR_NO_SECURITY = "1";
 	
 	
 	
@@ -38,7 +39,7 @@ public class NFCPMessage {
 		this.typeOfMessage= typeOfMessage;
 		this.errorCode = errorCode;
 		this.unlockId =userID;
-		this.publicKey = null;
+		this.publicKey = "";
 	}
 	
 	/**
@@ -102,7 +103,11 @@ public class NFCPMessage {
 		return id;
 	}
 	public String getPublicKey(){
-		return publicKey;
+		if(this.publicKey.equals("")){
+			return null;
+		}else{
+			return publicKey;
+		}
 	}
 	public void setPublicKey(String publicKey){
 		this.publicKey = publicKey;
@@ -114,6 +119,10 @@ public class NFCPMessage {
 
 	public void setUnlockId(String unlockId) {
 		this.unlockId = unlockId;
+	}
+
+	public void setErrorCode(String errorCode) {
+		this.errorCode = errorCode;
 	}
 	
 }

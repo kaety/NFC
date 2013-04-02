@@ -83,21 +83,28 @@ public class Krypto {
 	 * @return
 	 */
 	public String decryptMessage(String msg) {
+		if(publicKey != null){
+		
+			byte[] decrypt =Base64.decode(msg, Base64.DEFAULT);
+			byte[] cipherData = null;
 
-		byte[] decrypt =Base64.decode(msg, Base64.DEFAULT);
-		byte[] cipherData = null;
+			try {
+				Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+				cipher.init(Cipher.DECRYPT_MODE, privateKey);
+				cipherData = cipher.doFinal(decrypt);
 
-		try {
-			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-			cipher.init(Cipher.DECRYPT_MODE, privateKey);
-			cipherData = cipher.doFinal(decrypt);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
+			return new String(cipherData);
+			
+		}else{
+			
+			return null;
+			
 		}
-
-		return new String(cipherData);
-
+		
 	}
 	
 	/**

@@ -12,16 +12,25 @@ import android.os.Parcelable;
 import android.provider.Settings;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
+/**
+ * Most ccompex class in the app and also the Main activity.
+ * Handles next to all communication over NFC.
+ * @author Fredrik
+ *
+ */
 public class MainActivity extends Activity implements CreateNdefMessageCallback {
 
+	//Every time a new Message is received it is put here
 	private String latestRecievedMsg;
+	
 	private NFCPMessage nfcpMessage;
 	private final long TIMEOUT = 60 *1000;//GONE IN 60seconds
 	private Long loginTime;
@@ -29,6 +38,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	private NfcAdapter nfcAdapter;
 	private DAO dao = new DAO(this);
 	private Krypto krypto = null;
+	
 
 	@SuppressLint("NewApi")
 	@Override
@@ -135,14 +145,30 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 					nfcpMessage.clear();
 				}
 			}else if(type.equals(NFCPMessage.MESSAGE_TYPE_SHARE)){
-				Toast.makeText(this,nfcpMessage.getUnlockId() , Toast.LENGTH_LONG);
-				////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				String unlockId = krypto.decryptMessage(nfcpMessage.getUnlockId());
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				//getting errorCode to see if unlockId is encrypted or not
+				String errorCode = nfcpMessage.getErrorCode();
+				
+				String unlockId = nfcpMessage.getUnlockId();
+				
+				//If there is encryption
+				if(errorCode.equals(NFCPMessage.ERROR_NONE)){
+					if(unlockId != null){
+						String msg  = krypto.decryptMessage(unlockId);
+						nfcpMessage.setUnlockId(msg);
+					}
+				}
+				//Else just insert
+				
+				//Ask before insert();
+				new AlertDialog.Builder(this)
+				.setTitle("Confirm insert")
+				.setMessage("Do you really want to insert lockId: " +  nfcpMessage.getUniqueId() + " and unlockId: " + unlockId + "?")
+				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+				    public void onClick(DialogInterface dialog, int whichButton) {
+				    	dao.insert(nfcpMessage.getUniqueId(), nfcpMessage.getUnlockId());
+				    }})
+				 .setNegativeButton(android.R.string.no, null).show();
 				//insert into Database
-				dao.insert(nfcpMessage.getUniqueId(), unlockId);
 			}else if(type.equals(NFCPMessage.MESSAGE_TYPE_BEACON)){
 				
 				//Save latest received publicKey to encrypt with
