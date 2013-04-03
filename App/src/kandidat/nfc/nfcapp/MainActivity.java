@@ -149,7 +149,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 					Intent deniedIntent = new Intent(this,DeniedActivity.class);
 					deniedIntent.putExtra("ErrorCode", nfcpMessage.getErrorCode());
 					startActivity(deniedIntent);
-					nfcpMessage.clear();
+					nfcpMessage.clearAll();
 				}
 			}else if(type.equals(NFCPMessage.MESSAGE_TYPE_SHARE)){
 				//getting errorCode to see if unlockId is encrypted or not
@@ -160,8 +160,9 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 				//If there is encryption
 				if(errorCode.equals(NFCPMessage.ERROR_NONE)){
 					if(unlockId != null){
-						String msg  = krypto.decryptMessage(unlockId);
-						nfcpMessage.setUnlockId(msg);
+						Toast.makeText(this, "" + unlockId, Toast.LENGTH_LONG);
+						//String msg  = krypto.decryptMessage(unlockId);
+						//nfcpMessage.setUnlockId(msg);
 					}
 				}
 				//Else just insert
@@ -288,7 +289,9 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 	    // Save the user's state
-	    savedInstanceState.putSerializable("KRYPTO", krypto);
+		if (krypto != null){
+			savedInstanceState.putSerializable("KRYPTO", krypto);
+		}
 	
 	    // Always call the superclass so it can save the view hierarchy state
 	    super.onSaveInstanceState(savedInstanceState);

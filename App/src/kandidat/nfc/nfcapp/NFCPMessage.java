@@ -44,7 +44,7 @@ public class NFCPMessage {
 		this.status = status;
 		this.typeOfMessage= typeOfMessage;
 		this.errorCode = errorCode;
-		this.unlockId =unlockId;
+		this.unlockId = unlockId;
 		this.publicKey = "";
 	}
 	
@@ -54,9 +54,9 @@ public class NFCPMessage {
 		this.name = name;
 		this.id = id;
 		this.status = status;
-		this.typeOfMessage= typeOfMessage;
+		this.typeOfMessage = typeOfMessage;
 		this.errorCode = errorCode;
-		this.unlockId = "";
+		this.unlockId = "    ";
 		this.publicKey = "";
 	}
 	
@@ -71,20 +71,27 @@ public class NFCPMessage {
 			typeOfMessage = s.substring(4, 5); //1 byte
 			status = s.substring(5,6);//1 byte
 			errorCode = s.substring(6, 7);
-			unlockId = s.substring(7, 11); //4 bytes
-			if(s.length() > 11){
-				publicKey = s.substring(11);
+			//If it is of type SHARE then the rest of message is the encrypted ulockId
+			if (typeOfMessage.equals(NFCPMessage.MESSAGE_TYPE_SHARE)){
+				unlockId = s.substring(7);
+			//If it is of other type it is unlockId maybe followed by a public key
+			}else{
+				unlockId = s.substring(7, 11); //4 bytes
+				if(s.length() > 11){
+					publicKey = s.substring(11);
+				}
 			}
 		}
 	}
 	
-	public void clear(){
-		name ="";
-		id ="";
-		typeOfMessage="";
+	public void clearAll(){
+		name = "";
+		id = "";
+		typeOfMessage = "";
 		status="";
-		errorCode="";
-		unlockId="";
+		errorCode = "";
+		unlockId = "";
+		publicKey = "";
 	}
 	
 	@Override

@@ -22,7 +22,7 @@ public class ShareActivity extends Activity implements CreateNdefMessageCallback
 	//The four bytes unique identifier for a door
 	private String doorId;
 	//The four bytes key for the door
-	private String key;
+	private String unlockId;
 	//Communication object
 	private NfcAdapter nfcAdapter;
 	//The receiving phones public key
@@ -40,7 +40,7 @@ public class ShareActivity extends Activity implements CreateNdefMessageCallback
 		// Getting information
 		Intent intent = getIntent();
 		doorId = intent.getStringExtra("doorId");
-		key = intent.getStringExtra("key");
+		unlockId = intent.getStringExtra("key");
 		
 		//Gets the NFCAdapter and prepares class for beaming NDEF
 		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -59,7 +59,7 @@ public class ShareActivity extends Activity implements CreateNdefMessageCallback
 	public NdefMessage createNdefMessage(NfcEvent arg0) {
 		//Using our protocol
 		NFCPMessage sendMsg = new NFCPMessage(doorId.substring(0,2), doorId.substring(2),
-				NFCPMessage.STATUS_OK, NFCPMessage.MESSAGE_TYPE_SHARE, NFCPMessage.ERROR_NONE, key);
+				NFCPMessage.STATUS_OK, NFCPMessage.MESSAGE_TYPE_SHARE, NFCPMessage.ERROR_NONE, unlockId);
 		
 		//if public key is found encrypt unlockId and put it back
 		if (publicKey != null){
