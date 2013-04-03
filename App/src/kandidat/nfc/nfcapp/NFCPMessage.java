@@ -2,6 +2,12 @@ package kandidat.nfc.nfcapp;
 
 public class NFCPMessage {
 
+	//Values for test
+	public static final String TEST_NAME = "TE";
+	public static final String TEST_ID = "01";
+	public static final String TEST_UNLOCKID = "Anna";
+	public static final String TEST_UNIQUEID = TEST_NAME + TEST_ID;
+
 	//The three types of message
 	public static final String MESSAGE_TYPE_BEACON = "1";
 	public static final String MESSAGE_TYPE_UNLOCK = "2";
@@ -30,15 +36,27 @@ public class NFCPMessage {
 	private String publicKey; //This will be added if message is of type 1
 	
 	
-	//Constructor Type1 and Type3 Message
+	//Constructor Type2 Message
 	public NFCPMessage(String name, String id, String status, String typeOfMessage,
-			String errorCode,String userID) {
+			String errorCode,String unlockId) {
 		this.name = name;
 		this.id = id;
 		this.status = status;
 		this.typeOfMessage= typeOfMessage;
 		this.errorCode = errorCode;
-		this.unlockId =userID;
+		this.unlockId =unlockId;
+		this.publicKey = "";
+	}
+	
+	//Constructor Type1 Message
+	public NFCPMessage(String name, String id, String status, String typeOfMessage,
+			String errorCode) {
+		this.name = name;
+		this.id = id;
+		this.status = status;
+		this.typeOfMessage= typeOfMessage;
+		this.errorCode = errorCode;
+		this.unlockId = "";
 		this.publicKey = "";
 	}
 	

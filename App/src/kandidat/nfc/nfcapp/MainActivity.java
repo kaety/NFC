@@ -36,8 +36,8 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	private Long loginTime;
 	// Objekt som representerar NFC adaptern
 	private NfcAdapter nfcAdapter;
-	private DAO dao = new DAO(this);
-	private Krypto krypto = null;
+	private DAO dao;
+	private Krypto krypto;
 	
 
 	@SuppressLint("NewApi")
@@ -67,7 +67,14 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 		}
 
 		nfcAdapter.setNdefPushMessageCallback(this, this);
+		dao = new DAO(this);
 		dao.open();
+		//Insert values to use with test
+		dao.insert(NFCPMessage.TEST_UNIQUEID, NFCPMessage.TEST_UNLOCKID);
+		
+		if (krypto == null){
+			krypto = new Krypto();
+		}
 	}
 
 	/**
@@ -193,8 +200,8 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 			
 			krypto = new Krypto();
 			String publicKey = krypto.publicKeyToString();
-			sendMsg = new NFCPMessage("TE","01",NFCPMessage.STATUS_OK, NFCPMessage.MESSAGE_TYPE_BEACON,
-					NFCPMessage.ERROR_NONE, "Anna");
+			sendMsg = new NFCPMessage(NFCPMessage.TEST_NAME,NFCPMessage.TEST_ID,NFCPMessage.STATUS_OK,
+					NFCPMessage.MESSAGE_TYPE_BEACON,NFCPMessage.ERROR_NONE);
 			sendMsg.setPublicKey(publicKey);
 			
 		} else if (nfcpMessage.getType().equals(NFCPMessage.MESSAGE_TYPE_BEACON)) {
@@ -277,4 +284,22 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 		view.setText(s + "\n");
 		
 	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+	    // Save the user's state
+	    savedInstanceState.putSerializable("KRYPTO", krypto);
+	
+	    // Always call the superclass so it can save the view hierarchy state
+	    super.onSaveInstanceState(savedInstanceState);
+	}
+	
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+	    // Always call the superclass so it can restore the view hierarchy
+	    super.onRestoreInstanceState(savedInstanceState);
+	   
+	    // Restore state members from saved instance
+	    krypto = (Krypto) savedInstanceState.getSerializable("KRYPTO");
+	}
+
 }

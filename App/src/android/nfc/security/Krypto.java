@@ -1,21 +1,24 @@
 package android.nfc.security;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.*;
 import javax.crypto.Cipher;
-
 import android.util.Base64;
 
 
-public class Krypto {
-	private final int KEY_SIZE= 1024;//If change keysize also change end exp
-	private final int END_EXP = 5;
-	private final String CHOSEN_ALGORITHM = "RSA";
-	private RSAPublicKey publicKey = null;
-	private RSAPrivateKey privateKey = null;
-	private KeyPair kp = null;
+public class Krypto implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static transient final int KEY_SIZE= 1024;//If change keysize also change end exp
+	private static transient final int END_EXP = 5;
+	private static transient final String CHOSEN_ALGORITHM = "RSA";
+	private RSAPublicKey publicKey;
+	private RSAPrivateKey privateKey;
 
 /*	public static void main(String[] args) {
 		// Create krypto1 generates a KeyPair
@@ -112,14 +115,17 @@ public class Krypto {
 	 */
 	public void createKeyPair() {
 		try {
-			KeyPairGenerator kpg = KeyPairGenerator.getInstance(CHOSEN_ALGORITHM);
+			KeyPairGenerator kpg = KeyPairGenerator.getInstance(CHOSEN_ALGORITHM, "BC");
 			kpg.initialize(KEY_SIZE);
-			kp = kpg.genKeyPair();
+			KeyPair kp = kpg.genKeyPair();
 			publicKey = (RSAPublicKey) kp.getPublic();
 			privateKey = (RSAPrivateKey) kp.getPrivate();
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
-			}
+			} catch (NoSuchProviderException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
