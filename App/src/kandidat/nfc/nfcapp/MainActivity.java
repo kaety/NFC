@@ -1,6 +1,9 @@
 package kandidat.nfc.nfcapp;
 
 import java.nio.charset.Charset;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -160,9 +163,13 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 				//If there is encryption
 				if(errorCode.equals(NFCPMessage.ERROR_NONE)){
 					if(unlockId != null){
-						Toast.makeText(this, "" + unlockId, Toast.LENGTH_LONG);
-						//String msg  = krypto.decryptMessage(unlockId);
-						//nfcpMessage.setUnlockId(msg);
+						new AlertDialog.Builder(this)
+							.setTitle("unlockId to decrypt")
+							.setMessage("unlockId: " + unlockId)
+							.setNegativeButton(android.R.string.no, null).show();
+						String msg  = krypto.decryptMessage(unlockId);
+						nfcpMessage.setUnlockId(msg);
+						
 					}
 				}
 				//Else just insert
@@ -184,6 +191,11 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 				editor.putString("publicKey", nfcpMessage.getPublicKey());
 				editor.commit();
 				
+				Logger.getAnonymousLogger().log(Level.INFO, "publicKey: " + nfcpMessage.getPublicKey());
+				new AlertDialog.Builder(this)
+				.setTitle("Display publicKey")
+				.setMessage("publicKey: " + nfcpMessage.getPublicKey())
+				.setNegativeButton(android.R.string.no, null).show();	
 			}
 			getIntent().setAction("");
 	}
@@ -199,8 +211,9 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 
 		if (nfcpMessage == null) { //If no message has been received.
 			
-			krypto = new Krypto();
 			String publicKey = krypto.publicKeyToString();
+			//Logging the value of the public Key created
+			Logger.getAnonymousLogger().log(Level.INFO, "PublicKey: " + publicKey);
 			sendMsg = new NFCPMessage(NFCPMessage.TEST_NAME,NFCPMessage.TEST_ID,NFCPMessage.STATUS_OK,
 					NFCPMessage.MESSAGE_TYPE_BEACON,NFCPMessage.ERROR_NONE);
 			sendMsg.setPublicKey(publicKey);

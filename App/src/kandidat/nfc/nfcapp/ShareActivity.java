@@ -8,7 +8,9 @@ import android.nfc.NfcAdapter.CreateNdefMessageCallback;
 import android.nfc.NfcEvent;
 import android.nfc.security.Krypto;
 import android.os.Bundle;
+import android.widget.Toast;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 /**
@@ -27,6 +29,8 @@ public class ShareActivity extends Activity implements CreateNdefMessageCallback
 	private NfcAdapter nfcAdapter;
 	//The receiving phones public key
 	private String publicKey;
+	
+	private NFCPMessage sendMsg;
 	
 	@Override
 	/**
@@ -49,7 +53,33 @@ public class ShareActivity extends Activity implements CreateNdefMessageCallback
 		//Getting public key from shared prefs if it exist else null
 		SharedPreferences pref = this.getSharedPreferences("publicKey", 1);
 		publicKey = pref.getString("publicKey", null);
+		
+		prepareNdefMessage();
 	}
+	/**
+	 * Called from oncreate the prepare the message when the activity is created instead of when it is needed
+	 */
+	public void prepareNdefMessage(){
+		//Using our protocol
+		sendMsg = new NFCPMessage(doorId.substring(0,2), doorId.substring(2),
+				NFCPMessage.STATUS_OK, NFCPMessage.MESSAGE_TYPE_SHARE, NFCPMessage.ERROR_NONE, unlockId);
+		
+		//if public key is found encrypt unlockId and put it back
+		if (publicKey != null){
+			unlockId = sendMsg.getUnlockId();
+			Krypto krypto = new Krypto(publicKey);
+			unlockId = krypto.encryptMessage(unlockId);
+			sendMsg.setUnlockId(unlockId);
+		}else{
+			sendMsg.setErrorCode(NFCPMessage.ERROR_NO_SECURITY);
+		}
+		
+		new AlertDialog.Builder(this)
+		.setTitle("Display encrypted unlockId")
+		.setMessage("unlockId: " + unlockId)
+		.setNegativeButton(android.R.string.no, null).show();	
+	}
+	
 
 	/**
 	 * Automatic call.
@@ -57,19 +87,6 @@ public class ShareActivity extends Activity implements CreateNdefMessageCallback
 	 */
 	@Override
 	public NdefMessage createNdefMessage(NfcEvent arg0) {
-		//Using our protocol
-		NFCPMessage sendMsg = new NFCPMessage(doorId.substring(0,2), doorId.substring(2),
-				NFCPMessage.STATUS_OK, NFCPMessage.MESSAGE_TYPE_SHARE, NFCPMessage.ERROR_NONE, unlockId);
-		
-		//if public key is found encrypt unlockId and put it back
-		if (publicKey != null){
-			String unlockId = sendMsg.getUnlockId();
-			Krypto krypto = new Krypto(publicKey);
-			unlockId = krypto.encryptMessage(unlockId);
-			sendMsg.setUnlockId(unlockId);
-		}else{
-			sendMsg.setErrorCode(NFCPMessage.ERROR_NO_SECURITY);
-		}
 		//Create record
 		NdefRecord record = new NdefRecord(NdefRecord.TNF_MIME_MEDIA,
 				"text/plain".getBytes(Charset.forName("US-ASCII")),

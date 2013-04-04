@@ -1,11 +1,17 @@
 package android.nfc.security;
+
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.*;
+
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 import android.util.Base64;
 
 
@@ -55,11 +61,20 @@ public class Krypto implements Serializable {
 
 		KeyFactory keyFactory;
 		try {
-			keyFactory = KeyFactory.getInstance(CHOSEN_ALGORITHM);
+			keyFactory = KeyFactory.getInstance(CHOSEN_ALGORITHM,"BC");
 			publicKey = (RSAPublicKey) keyFactory.generatePublic(RSAspec);
-		} catch (Exception e) {
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchProviderException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+
 
 	}
 
@@ -91,14 +106,29 @@ public class Krypto implements Serializable {
 			byte[] decrypt =Base64.decode(msg, Base64.DEFAULT);
 			byte[] cipherData = null;
 
-			try {
-				Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-				cipher.init(Cipher.DECRYPT_MODE, privateKey);
-				cipherData = cipher.doFinal(decrypt);
+				Cipher cipher;
+				try {
+					cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+					cipher.init(Cipher.DECRYPT_MODE, privateKey);
+					cipherData = cipher.doFinal(decrypt);
+				} catch (NoSuchAlgorithmException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NoSuchPaddingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvalidKeyException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalBlockSizeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (BadPaddingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+
 
 			return new String(cipherData);
 			
@@ -137,7 +167,7 @@ public class Krypto implements Serializable {
 		RSAPublicKeySpec pub = null;
 
 		try {
-			fact = KeyFactory.getInstance(CHOSEN_ALGORITHM);
+			fact = KeyFactory.getInstance(CHOSEN_ALGORITHM,"BC");
 			pub = fact.getKeySpec(publicKey, RSAPublicKeySpec.class);
 		} catch (Exception e) {
 			e.printStackTrace();
