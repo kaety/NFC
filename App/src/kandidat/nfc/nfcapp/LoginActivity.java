@@ -77,7 +77,7 @@ public class LoginActivity extends Activity{
 				editor.putLong("login", System.currentTimeMillis());
 				editor.commit();
 				
-				startActivity(new Intent(this, MainActivity.class));
+				startActivity(new Intent(this, MainActivity.class)); //.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
 				finish();
 			} else {
 				passwordInput.setText("");

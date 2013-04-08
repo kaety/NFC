@@ -20,8 +20,8 @@ public class Krypto implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static transient final int KEY_SIZE= 1024;//If change keysize also change end exp
-	private static transient final int END_EXP = 5;
+	private static transient final int KEY_SIZE= 1024;//If change keysize also change end exp (1024 -> EXP = 5)
+	private static transient final int END_EXP = 5;//CHANGE 
 	private static transient final String CHOSEN_ALGORITHM = "RSA";
 	private RSAPublicKey publicKey;
 	private RSAPrivateKey privateKey;
@@ -86,7 +86,7 @@ public class Krypto implements Serializable {
 	public String encryptMessage(String msg) {
 		byte[] encryptedMessage = null;
 		try {
-			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+			Cipher cipher = Cipher.getInstance(CHOSEN_ALGORITHM,"BC");
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 			encryptedMessage = cipher.doFinal(msg.getBytes());
 		} catch (Exception e) {
@@ -108,7 +108,7 @@ public class Krypto implements Serializable {
 
 				Cipher cipher;
 				try {
-					cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+					cipher = Cipher.getInstance(CHOSEN_ALGORITHM,"BC");
 					cipher.init(Cipher.DECRYPT_MODE, privateKey);
 					cipherData = cipher.doFinal(decrypt);
 				} catch (NoSuchAlgorithmException e) {
@@ -124,6 +124,9 @@ public class Krypto implements Serializable {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (BadPaddingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NoSuchProviderException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

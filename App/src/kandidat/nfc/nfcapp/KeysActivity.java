@@ -119,8 +119,13 @@ public class KeysActivity extends Activity {
 			
 			Intent intent = new Intent(this ,ShareActivity.class);
 			intent.putExtra("doorId",getLockId());
-			intent.putExtra("key",searchForUnlockId());
-			startActivity(intent);
+			String unlockId = searchForUnlockId();
+			if(unlockId != null){
+				intent.putExtra("key",unlockId);
+				startActivity(intent);
+			}else{
+				loggerTextView.setText("Key not found. You can't share a key that does not exist!");
+			}
 			
 		}else{
 			loggerTextView.setText("You must supply a four character long doorId");

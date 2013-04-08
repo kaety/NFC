@@ -1,9 +1,6 @@
 package kandidat.nfc.nfcapp;
 
 import java.nio.charset.Charset;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -100,11 +97,6 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	public void onPause() {
 		super.onPause();
 		
-		////////////////////////////////DEBUG//////////////////////////////
-		//Toast.makeText(this, "onPause", 1).show();
-		///////////////////////////////////////////////////////////////////
-		
-		dao.close();
 	}
 	/**
 	 * Get LoginTime. Check if you have to login again.
@@ -112,10 +104,6 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	@Override
 	public void onResume() {
 		super.onResume();
-		
-		////////////////////////////DEBUG////////////////////////////////////////////
-		//Toast.makeText(this, "onResume", 1).show();
-		/////////////////////////////////////////////////////////////////////////////
 
 		// Get the between instance stored values
 	//	SharedPreferences pre = getSharedPreferences("login", 1);
@@ -128,8 +116,14 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	//		finish();
 	//	}else
 		if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
-				processIntent(getIntent());
+			processIntent(getIntent());
 		}
+	}
+	
+	@Override
+	public void onNewIntent(Intent intent){
+		//This is not innocent if you would think so!
+		setIntent(intent);
 	}
 
 	/**
@@ -163,21 +157,19 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 				//If there is encryption
 				if(errorCode.equals(NFCPMessage.ERROR_NONE)){
 					if(unlockId != null){
-						new AlertDialog.Builder(this)
-							.setTitle("unlockId to decrypt")
-							.setMessage("unlockId: " + unlockId)
-							.setNegativeButton(android.R.string.no, null).show();
+
 						String msg  = krypto.decryptMessage(unlockId);
 						nfcpMessage.setUnlockId(msg);
-						
+
 					}
+					
 				}
 				//Else just insert
 				
 				//Ask before insert();
 				new AlertDialog.Builder(this)
 				.setTitle("Confirm insert")
-				.setMessage("Do you really want to insert lockId: " +  nfcpMessage.getUniqueId() + " and unlockId: " + unlockId + "?")
+				.setMessage("Do you really want to insert lockId: " +  nfcpMessage.getUniqueId() + " and unlockId: " + nfcpMessage.getUnlockId() + "?")
 				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 				    public void onClick(DialogInterface dialog, int whichButton) {
 				    	dao.insert(nfcpMessage.getUniqueId(), nfcpMessage.getUnlockId());
@@ -190,12 +182,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 				Editor editor = getSharedPreferences("publicKey", 0).edit();
 				editor.putString("publicKey", nfcpMessage.getPublicKey());
 				editor.commit();
-				
-				Logger.getAnonymousLogger().log(Level.INFO, "publicKey: " + nfcpMessage.getPublicKey());
-				new AlertDialog.Builder(this)
-				.setTitle("Display publicKey")
-				.setMessage("publicKey: " + nfcpMessage.getPublicKey())
-				.setNegativeButton(android.R.string.no, null).show();	
+		
 			}
 			getIntent().setAction("");
 	}
@@ -213,7 +200,6 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 			
 			String publicKey = krypto.publicKeyToString();
 			//Logging the value of the public Key created
-			Logger.getAnonymousLogger().log(Level.INFO, "PublicKey: " + publicKey);
 			sendMsg = new NFCPMessage(NFCPMessage.TEST_NAME,NFCPMessage.TEST_ID,NFCPMessage.STATUS_OK,
 					NFCPMessage.MESSAGE_TYPE_BEACON,NFCPMessage.ERROR_NONE);
 			sendMsg.setPublicKey(publicKey);
@@ -316,6 +302,10 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	   
 	    // Restore state members from saved instance
 	    krypto = (Krypto) savedInstanceState.getSerializable("KRYPTO");
+	}
+	@Override
+	public void onDestroy(){
+		dao.close();
 	}
 
 }

@@ -41,25 +41,29 @@ public class ShareActivity extends Activity implements CreateNdefMessageCallback
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_share);
 		
-		// Getting information
-		Intent intent = getIntent();
-		doorId = intent.getStringExtra("doorId");
-		unlockId = intent.getStringExtra("key");
-		
+
 		//Gets the NFCAdapter and prepares class for beaming NDEF
 		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 		nfcAdapter.setNdefPushMessageCallback(this, this);
 		
-		//Getting public key from shared prefs if it exist else null
-		SharedPreferences pref = this.getSharedPreferences("publicKey", 1);
-		publicKey = pref.getString("publicKey", null);
-		
-		prepareNdefMessage();
+
+		if (sendMsg == null){
+			prepareNdefMessage();
+		}
 	}
 	/**
 	 * Called from oncreate the prepare the message when the activity is created instead of when it is needed
 	 */
 	public void prepareNdefMessage(){
+		// Getting information
+		Intent intent = getIntent();
+		doorId = intent.getStringExtra("doorId");
+		unlockId = intent.getStringExtra("key");
+		
+		//Getting public key from shared prefs if it exist else null
+		SharedPreferences pref = this.getSharedPreferences("publicKey", 1);
+		publicKey = pref.getString("publicKey", null);
+		
 		//Using our protocol
 		sendMsg = new NFCPMessage(doorId.substring(0,2), doorId.substring(2),
 				NFCPMessage.STATUS_OK, NFCPMessage.MESSAGE_TYPE_SHARE, NFCPMessage.ERROR_NONE, unlockId);
@@ -74,10 +78,10 @@ public class ShareActivity extends Activity implements CreateNdefMessageCallback
 			sendMsg.setErrorCode(NFCPMessage.ERROR_NO_SECURITY);
 		}
 		
-		new AlertDialog.Builder(this)
+		/*new AlertDialog.Builder(this)
 		.setTitle("Display encrypted unlockId")
 		.setMessage("unlockId: " + unlockId)
-		.setNegativeButton(android.R.string.no, null).show();	
+		.setNegativeButton(android.R.string.no, null).show();*/	
 	}
 	
 
@@ -94,4 +98,26 @@ public class ShareActivity extends Activity implements CreateNdefMessageCallback
 						Charset.forName("US-ASCII")));
 		return new NdefMessage(new NdefRecord[] { record });
 	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+	    // Save the user's state
+		if (doorId != null && unlockId != null){
+			savedInstanceState.putString("doorId", doorId);
+			savedInstanceState.putString("unlockId", unlockId);
+		}
+	    // Always call the superclass so it can save the view hierarchy state
+	    super.onSaveInstanceState(savedInstanceState);
+	}
+	
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+	    // Always call the superclass so it can restore the view hierarchy
+	    super.onRestoreInstanceState(savedInstanceState);
+	    if (doorId == null && unlockId == null){
+	    	// Restore state members from saved instance
+	    	doorId = savedInstanceState.getString("doorId");
+	    	unlockId = savedInstanceState.getString("unlockId");
+	    }
+	}
+
 }
