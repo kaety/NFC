@@ -18,12 +18,13 @@ public class NFCPMessage {
 	public static final String STATUS_OK = "0";
 	public static final String STATUS_ERROR = "1";
 	
+	//Errors as int codes
+	public static final int INT_ERROR_NONE = 0;
+	public static final int INT_ERROR_NO_SECURITY = 1;
 	
 	//Errors codes
-	public static final String ERROR_NONE = "0";
-	public static final String ERROR_NO_SECURITY = "1";
-	
-	
+	public static final String ERROR_NONE = Integer.toString(INT_ERROR_NONE);
+	public static final String ERROR_NO_SECURITY = Integer.toString(INT_ERROR_NO_SECURITY);
 	
 	
 	//Fields

@@ -6,40 +6,40 @@ import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.*;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-
 import android.util.Base64;
 
-
+/*
+ * This Class represents pair a RSA keys. 
+ * It has methods for generating a pair of keys and also methods for converting to and from strings.
+ * 	
+ * 	//Example code
+ *		// Create krypto1 generates a KeyPair
+ *		Krypto krypto = new Krypto();
+ *
+ *		// Create krypto2 generates the public key from a string
+ *		Krypto krypto2 = new Krypto(krypto.publicKeyToString());
+ *
+ *		// Encrypt the message
+ *		String toDecrypt = krypto2.encryptMessage("nyckel");
+ *		
+ *		//Decrypt the message
+ *		String decrypted = krypto.decryptMessage(toDecrypt);
+ *		System.out.println(decrypted);
+ */
 public class Krypto implements Serializable {
-	/**
-	 * 
-	 */
+
+	//Version 1. This is a required property for Serialization
 	private static final long serialVersionUID = 1L;
-	private static transient final int KEY_SIZE= 1024;//If change keysize also change end exp (1024 -> EXP = 5)
-	private static transient final int END_EXP = 5;//CHANGE 
+	//If change KEY_SIZE also change end exp (KEY_SIZE = 1024 -> EXP = 5)
+	private static transient final int KEY_SIZE= 1024;
+	private static transient final int END_EXP = 5;
 	private static transient final String CHOSEN_ALGORITHM = "RSA";
 	private RSAPublicKey publicKey;
 	private RSAPrivateKey privateKey;
-
-/*	public static void main(String[] args) {
-		// Create krypto1 generates a KeyPair
-		Krypto krypto = new Krypto();
-
-		// Create krypto2 generates the public key from a string
-		Krypto krypto2 = new Krypto(krypto.publicKeyToString());
-
-		// Encrypt the message
-		String toDecrypt = krypto2.encryptMessage("nyckel");
-		
-		//Decrypt the message
-		String decrypted = krypto.decryptMessage(toDecrypt);
-		System.out.println(decrypted);
-	}*/
 	
 	
 	/**
@@ -50,7 +50,7 @@ public class Krypto implements Serializable {
 	}
 	
 	/**
-	 * Constructor to recreate the publickey from a message
+	 * Constructor to recreate the public key from a message and leaves the private empty
 	 * @param publickey
 	 */
 	public Krypto(String publickey) {
@@ -64,24 +64,18 @@ public class Krypto implements Serializable {
 			keyFactory = KeyFactory.getInstance(CHOSEN_ALGORITHM,"BC");
 			publicKey = (RSAPublicKey) keyFactory.generatePublic(RSAspec);
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NoSuchProviderException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InvalidKeySpecException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-
-
 	}
 
 	/**
 	 * Method to encrypt a message with public key
-	 * @param msg
-	 * @return
+	 * @param msg message to encrypt
+	 * @return encrypted message
 	 */
 	public String encryptMessage(String msg) {
 		byte[] encryptedMessage = null;
@@ -97,8 +91,8 @@ public class Krypto implements Serializable {
 
 	/**
 	 * Method to decrypt a message with private key
-	 * @param msg
-	 * @return
+	 * @param msg encrypted message to decrypt
+	 * @return decrypted message
 	 */
 	public String decryptMessage(String msg) {
 		if(publicKey != null){
@@ -112,26 +106,18 @@ public class Krypto implements Serializable {
 					cipher.init(Cipher.DECRYPT_MODE, privateKey);
 					cipherData = cipher.doFinal(decrypt);
 				} catch (NoSuchAlgorithmException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (NoSuchPaddingException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (InvalidKeyException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IllegalBlockSizeException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (BadPaddingException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (NoSuchProviderException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
-
 
 			return new String(cipherData);
 			
@@ -140,11 +126,11 @@ public class Krypto implements Serializable {
 			return null;
 			
 		}
-		
+
 	}
 	
 	/**
-	 * method to create a keypair
+	 * method to create a key pair. Called from constructor
 	 */
 	public void createKeyPair() {
 		try {
@@ -156,14 +142,13 @@ public class Krypto implements Serializable {
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			} catch (NoSuchProviderException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	/**
 	 * method to generate a string from the public key
-	 * @return
+	 * @return publicKey as a string
 	 */
 	public String publicKeyToString() {
 		KeyFactory fact;

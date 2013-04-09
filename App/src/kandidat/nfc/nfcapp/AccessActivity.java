@@ -6,6 +6,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
+/**
+ * This activity is called from main if a successful unlock has been done.
+ * Only shown in a while.
+ * @author Fredrik
+ *
+ */
 public class AccessActivity extends Activity {
 	
 	 //stopping splash screen starting home activity.  

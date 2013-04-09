@@ -4,8 +4,16 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.widget.TextView;
 
+/**
+ * Called when you have no access or something goes wrong.
+ * @author Fredrik
+ *
+ */
 public class DeniedActivity extends Activity {
-
+	
+	/**
+	 * Need to add more cases here if we add more Error codes
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -16,24 +24,17 @@ public class DeniedActivity extends Activity {
 		int code = extras.getInt("ErrorCode");
 		 
 		
-		switch (code) {  
-         	case 1:  
-         		view.setText("Fel 1 Description:blablabla osv");
+		switch (code) {
+			case NFCPMessage.INT_ERROR_NONE:
+				//All is okay
+				break;
+         	case NFCPMessage.INT_ERROR_NO_SECURITY:  
+         		view.setText("No security exists.");
          		break;
-         	case 2:
-         		view.setText("Fel 2 Description:blablabla osv");
-         		break;
-         	case 3:
-         		view.setText("Fel 3 Description:blablabla osv");
-         		break;
-         	case 4:
-         		view.setText("Fel 4 Description:blablabla osv");
-         		break;
+         	default:
+         		;
 		 }
          		
 	}
 
-
-
-	
 }

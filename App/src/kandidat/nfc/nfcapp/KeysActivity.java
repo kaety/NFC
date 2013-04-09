@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+//TODO Delete needs to be added
+
 /**
  * Handles the Database of keys.
  * Sharing, Creating, Changing
@@ -17,6 +19,7 @@ public class KeysActivity extends Activity {
 
 	//Database Access Object
 	private DAO dao;
+	//An instance of the loggingwindows, under the buttons
 	private TextView loggerTextView;
 	
 	/**
@@ -31,6 +34,7 @@ public class KeysActivity extends Activity {
 		dao = new DAO(this);
 		dao.open();
 		
+		//Getting the loggingView
 		loggerTextView =(TextView) findViewById(R.id.textView1);
 		
 	}
@@ -48,7 +52,7 @@ public class KeysActivity extends Activity {
 	}
 
 	
-	/////////////////////Buttons///////////////////////////////////////////////////////
+
 	/**
 	 * Called from Button.
 	 * Creates or changes key for given door and key.
@@ -70,8 +74,8 @@ public class KeysActivity extends Activity {
 	    	
 	    }else{
 	    	
-	    	//dao.insert creates or changes if already created
-	    	dao.insert(lockID,unlockID);
+
+	    	dao.insertOrUpdate(lockID,unlockID);
 	    	loggerTextView.setText("Keypair stored");
 	    	
 	    }

@@ -70,7 +70,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 		dao = new DAO(this);
 		dao.open();
 		//Insert values to use with test
-		dao.insert(NFCPMessage.TEST_UNIQUEID, NFCPMessage.TEST_UNLOCKID);
+		dao.insertOrUpdate(NFCPMessage.TEST_UNIQUEID, NFCPMessage.TEST_UNLOCKID);
 		
 		if (krypto == null){
 			krypto = new Krypto();
@@ -172,7 +172,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 				.setMessage("Do you really want to insert lockId: " +  nfcpMessage.getUniqueId() + " and unlockId: " + nfcpMessage.getUnlockId() + "?")
 				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 				    public void onClick(DialogInterface dialog, int whichButton) {
-				    	dao.insert(nfcpMessage.getUniqueId(), nfcpMessage.getUnlockId());
+				    	dao.insertOrUpdate(nfcpMessage.getUniqueId(), nfcpMessage.getUnlockId());
 				    }})
 				 .setNegativeButton(android.R.string.no, null).show();
 				//insert into Database
