@@ -22,9 +22,9 @@
     <string name="keys_share">Share</string>
     <string name="keys_search">Search</string>
     
-    <string name="keys_search">Search</string>
-    <string name="keys_search">Search</string>
-    <string name="keys_search">Search</string>
+    <string name="main_status_red">Status Red</string>
+    <string name="main_status_green">Status Green</string>
+    <string name="main_config">Configuration</string>
     
     
 </resources>
