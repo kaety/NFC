@@ -1,8 +1,6 @@
 package kandidat.nfc.nfcapp;
 
-import java.util.logging.Logger;
 
-import android.nfc.security.Krypto;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.app.Activity;
@@ -10,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
@@ -21,6 +18,7 @@ public class LoginActivity extends Activity{
 	private final int NUMBER_OF_TRIES = 3;
 	private int tries = NUMBER_OF_TRIES-1;
 	
+
 	
 	/**
 	 * Gets the password from sharedPrefs. If it is empty you are prompted to enter password and you are sent to
@@ -31,8 +29,8 @@ public class LoginActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
-		SharedPreferences pref = getSharedPreferences("password", 1);
-		String password = pref.getString("password", "");
+		SharedPreferences pref = getSharedPreferences(PasswordActivity.PASSWORD_KEY, Context.MODE_PRIVATE);
+		String password = pref.getString(PasswordActivity.PASSWORD_KEY, "");
 		
 
 		//first time you use the app
@@ -67,10 +65,10 @@ public class LoginActivity extends Activity{
 			toast.show();
 		}else {
 			// Get the stored password from SharedPreferences
-			SharedPreferences pref = getSharedPreferences("password", 1);
-			String storedpw = pref.getString("password", "");
+			SharedPreferences pref = getSharedPreferences(PasswordActivity.PASSWORD_KEY, Context.MODE_PRIVATE);
+			String storedpw = pref.getString(PasswordActivity.PASSWORD_KEY, "");
 			
-			// compare stored password with "inputpassword"
+			// compare stored password with inputed password
 			if (Long.parseLong(input) == Long.parseLong(storedpw)) {
 				//Store loginTime in sharedPrefs
 				Editor editor = getSharedPreferences("login", 0).edit();

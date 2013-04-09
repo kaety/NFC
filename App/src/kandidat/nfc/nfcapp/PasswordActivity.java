@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 public class PasswordActivity extends Activity {
 
+	public static final String PASSWORD_KEY = "password";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -19,8 +21,8 @@ public class PasswordActivity extends Activity {
 
 		EditText oldPassword = (EditText) findViewById(R.id.oldpassword);
 
-		SharedPreferences pref = getSharedPreferences("password", 1);
-		String storedpw = pref.getString("password", "");
+		SharedPreferences pref = getSharedPreferences(PASSWORD_KEY, 1);
+		String storedpw = pref.getString(PASSWORD_KEY, "");
 
 		// If we don't have a saved password we don't want to show
 		// "type in da old pw"
