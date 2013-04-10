@@ -8,42 +8,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".KeysActivity" >
 
-    <EditText
-        android:id="@+id/editText1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editText2"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="26dp"
-        android:ems="10"
-        android:hint="Which door?"
-        android:inputType="text"
-        android:maxLength="4" />
-
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/editText1"
-        android:layout_centerHorizontal="true"
-        android:ems="10"
-        android:hint="The key..."
-        android:inputType="text"
-        android:maxLength="4" >
-
-        <requestFocus />
-    </EditText>
-
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/editText2"
-        android:layout_marginTop="46dp"
-        android:text="Create"
-        android:onClick="createOrChange" />
-
     <Button
         android:id="@+id/button3"
         android:layout_width="wrap_content"
@@ -61,7 +25,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/button1"
         android:text="TextView" />
 
     <Button
@@ -81,5 +44,57 @@
         android:layout_toRightOf="@+id/button1"
         android:onClick="search"
         android:text="Search" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/button2"
+        android:layout_alignBottom="@+id/button2"
+        android:layout_alignLeft="@+id/textView1"
+        android:onClick="createOrChange"
+        android:text="Create" />
+
+    <EditText
+        android:id="@+id/editText2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button3"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:hint="The key..."
+        android:inputType="text"
+        android:maxLength="4" />
+
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/editText2"
+        android:layout_alignLeft="@+id/editText2"
+        android:layout_marginBottom="33dp"
+        android:ems="10"
+        android:hint="Which door?"
+        android:inputType="text"
+        android:maxLength="4" >
+
+        <requestFocus />
+    </EditText>
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/editText1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

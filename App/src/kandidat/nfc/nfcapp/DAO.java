@@ -1,5 +1,8 @@
 package kandidat.nfc.nfcapp;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -79,5 +82,20 @@ public class DAO {
 		 }catch(Exception e){
 			 return null;
 		 }
+	 }
+	 
+	 public Map<String,String> getAll(){
+		 Map<String,String> map = new TreeMap<String,String>();
+		 String selectAll = "SELECT " + DBHelper.COLUMN_2 + " FROM " + DBHelper.DATABASE_TABLE_NAME;
+		 Cursor c = database.rawQuery(selectAll,null);
+		 if(c.getCount() != 0){
+			 c.moveToFirst();
+			 map.put(c.getString(0), c.getString(1));
+			 while(c.getCount() > 0){
+				c.moveToNext();
+				map.put(c.getString(0), c.getString(1));
+			 }
+		 }
+		 return map;
 	 }
 }
