@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 //TODO Delete needs to be added
 
@@ -105,9 +106,13 @@ public class KeysActivity extends Activity {
 	 * Just cancels...
 	 * @param v
 	 */
-	public void finish(View v){
-		
-		finish();
+	public void delete(View v){
+		String lockId = getLockId();
+		if (lockId.length() == 4){
+			dao.delete(lockId);
+		}else{
+			Toast.makeText(this, "UnlockId has to be for characters", Toast.LENGTH_SHORT).show();
+		}
 		
 	}
 	
