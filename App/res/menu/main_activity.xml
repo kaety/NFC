@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     
-    <item android:id="@+id/main_status_red" android:title="@string/main_status_red"/>
-    <item android:id="@+id/main_status_green" android:title="@string/main_status_green"/>
-    <item android:id="@+id/main_config" android:title="@string/main_config"/>
+    <item android:id="@+id/main_status_red" android:title="@string/main_status_red" android:visible="false" android:orderInCategory="50"/>
+    <item android:id="@+id/main_status_green" android:title="@string/main_status_green" android:visible="true" android:orderInCategory="50"/>
+    <item android:id="@+id/main_config" android:title="@string/main_config" android:visible="true" android:orderInCategory="100"/>
     
 
 </menu>
