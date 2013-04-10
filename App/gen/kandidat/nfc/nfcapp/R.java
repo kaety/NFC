@@ -21,15 +21,17 @@ public final class R {
         public static final int activity_vertical_margin=0x7f040001;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
-        public static final int ic_menu_btn_add=0x7f020001;
-        public static final int ic_menu_delete=0x7f020002;
-        public static final int ic_menu_search_holo_light=0x7f020003;
-        public static final int ic_menu_share_holo_light=0x7f020004;
+        public static final int access_denied=0x7f020000;
+        public static final int access_granted=0x7f020001;
+        public static final int ic_launcher=0x7f020002;
+        public static final int ic_menu_btn_add=0x7f020003;
+        public static final int ic_menu_delete=0x7f020004;
+        public static final int ic_menu_search_holo_light=0x7f020005;
+        public static final int ic_menu_share_holo_light=0x7f020006;
     }
     public static final class id {
         public static final int LinearLayout1=0x7f08000a;
-        public static final int action_settings=0x7f08001b;
+        public static final int action_settings=0x7f08001c;
         public static final int button1=0x7f080007;
         public static final int button2=0x7f080003;
         public static final int button3=0x7f080002;
@@ -37,31 +39,32 @@ public final class R {
         public static final int editText1=0x7f080008;
         public static final int editText2=0x7f080004;
         public static final int errorLabel=0x7f080001;
-        public static final int keys_create=0x7f08001c;
-        public static final int keys_delete=0x7f08001d;
-        public static final int keys_search=0x7f08001e;
-        public static final int keys_share=0x7f08001f;
-        public static final int main_config=0x7f080022;
-        public static final int main_status_green=0x7f080021;
-        public static final int main_status_red=0x7f080020;
+        public static final int imageView1=0x7f080000;
+        public static final int keys_create=0x7f08001d;
+        public static final int keys_delete=0x7f08001e;
+        public static final int keys_search=0x7f08001f;
+        public static final int keys_share=0x7f080020;
+        public static final int main_config=0x7f080023;
+        public static final int main_status_green=0x7f080022;
+        public static final int main_status_red=0x7f080021;
         public static final int message=0x7f08000c;
         public static final int oldpassword=0x7f080010;
         public static final int passwordConfirm=0x7f08000f;
         public static final int passwordCreate=0x7f08000e;
         public static final int passwordView=0x7f08000d;
-        public static final int radioButton1=0x7f080012;
-        public static final int ratingBar1=0x7f080013;
-        public static final int ratingBar2=0x7f080014;
-        public static final int ratingBar3=0x7f080015;
-        public static final int ratingBar4=0x7f080016;
-        public static final int ratingBar5=0x7f080017;
-        public static final int ratingBar6=0x7f080018;
-        public static final int ratingBar7=0x7f080019;
-        public static final int ratingBar8=0x7f08001a;
+        public static final int radioButton1=0x7f080013;
+        public static final int ratingBar1=0x7f080014;
+        public static final int ratingBar2=0x7f080015;
+        public static final int ratingBar3=0x7f080016;
+        public static final int ratingBar4=0x7f080017;
+        public static final int ratingBar5=0x7f080018;
+        public static final int ratingBar6=0x7f080019;
+        public static final int ratingBar7=0x7f08001a;
+        public static final int ratingBar8=0x7f08001b;
         public static final int scrollView1=0x7f080009;
         public static final int submitPassword=0x7f080011;
         public static final int textView1=0x7f080005;
-        public static final int textView2=0x7f080000;
+        public static final int textView2=0x7f080012;
         public static final int title=0x7f08000b;
     }
     public static final class layout {

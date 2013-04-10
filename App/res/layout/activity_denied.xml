@@ -5,20 +5,19 @@
     tools:context=".DeniedActivity" >
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/errorLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="@string/access_denied" />
+        android:layout_marginTop="16dp" />
 
-    <TextView
-        android:id="@+id/errorLabel"
+    <ImageView
+        android:id="@+id/imageView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView2"
-        android:layout_alignRight="@+id/textView2"
-        android:layout_below="@+id/textView2"
-        android:layout_marginTop="16dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/access_denied" />
 
 </RelativeLayout>
