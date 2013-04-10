@@ -3,6 +3,8 @@ package kandidat.nfc.nfcapp;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -171,4 +173,12 @@ public class KeysActivity extends Activity {
 		return e1.getText().toString();
 	
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu){
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.keys_activity, menu);
+		return true;
+	}
+	
 }

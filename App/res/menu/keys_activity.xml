@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <item 
+        android:id="@+id/keys_create" 
+        android:visible="true" 
+        android:icon="@drawable/ic_menu_btn_add" 
+        android:orderInCategory="10" 
+        android:enabled="true" 
+        android:title="@string/keys_create"/>
+    <item 
+        android:id="@+id/keys_delete" 
+        android:visible="true" 
+        android:icon="@drawable/ic_menu_delete" 
+        android:orderInCategory="100" 
+        android:enabled="true" 
+        android:title="@string/keys_delete"/>
+    <item
+        android:id="@+id/keys_search"
+		android:visible="true"
+		android:icon="@drawable/ic_menu_search_holo_light"
+		android:orderInCategory="50"
+		android:enabled="true"
+		android:title="@string/keys_search"/>
+    <item
+        android:id="@+id/keys_share" 
+        android:orderInCategory="70" 
+        android:visible="true" 
+        android:icon="@drawable/ic_menu_share_holo_light" 
+        android:enabled="true" 
+        android:title="@string/keys_share"/>
+
+</menu>
