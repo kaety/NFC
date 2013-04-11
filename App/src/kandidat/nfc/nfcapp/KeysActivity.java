@@ -1,5 +1,9 @@
 package kandidat.nfc.nfcapp;
 
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -8,6 +12,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +48,22 @@ public class KeysActivity extends Activity {
 		
 		//Getting the loggingView
 		loggerTextView =(TextView) findViewById(R.id.textView1);
+		
+		//Populate the linear layout in the scrollView
+		LinearLayout linearlayout = (LinearLayout) findViewById(R.id.linearlayout1);
+		Map<String,String> map = dao.getAll();
+		RadioGroup rg = new RadioGroup(this);
+		rg.setId(999);
+
+		RadioButton rd;
+		for (Map.Entry<String, String> entry : map.entrySet()){
+			rd = new RadioButton(this);
+			rd.setText(entry.getKey() + "     /    " + entry.getValue());
+			rg.addView(rd);
+			
+		}
+		linearlayout.addView(rg);
+
 		
 	}
 	
@@ -84,6 +107,10 @@ public class KeysActivity extends Activity {
 	    	loggerTextView.setText("Keypair stored");
 	    	
 	    }
+		//Restart to redraw
+		Intent intent = getIntent();
+		finish();
+		startActivity(intent);
 	}
 	/**
 	 * Called from button.
@@ -92,7 +119,7 @@ public class KeysActivity extends Activity {
 	 */
 	public void search(View v){
 		
-		String unlockId = searchForUnlockId();
+		String unlockId = dao.get(getLockId());
 		if (unlockId != null){
 			
 			loggerTextView.setText("The key is:\n" + unlockId);
@@ -111,12 +138,16 @@ public class KeysActivity extends Activity {
 	 * @param v
 	 */
 	public void delete(View v){
-		String lockId = getLockId();
+		String lockId = getSelectedLockId();
 		if (lockId.length() == 4){
 			dao.delete(lockId);
 		}else{
 			Toast.makeText(this, "UnlockId has to be for characters", Toast.LENGTH_SHORT).show();
 		}
+		//Restart to redraw
+		Intent intent = getIntent();
+		finish();
+		startActivity(intent);
 		
 	}
 	
@@ -127,12 +158,12 @@ public class KeysActivity extends Activity {
 	 */
 	public void share(View v){
 		
-		String lockId = getLockId();
+		String lockId = getSelectedLockId();
 		if(lockId.length() == 4){
 			
 			Intent intent = new Intent(this ,ShareActivity.class);
-			intent.putExtra("doorId",getLockId());
-			String unlockId = searchForUnlockId();
+			intent.putExtra("doorId",lockId);
+			String unlockId = dao.get(lockId);
 			if(unlockId != null){
 				intent.putExtra("key",unlockId);
 				startActivity(intent);
@@ -146,17 +177,6 @@ public class KeysActivity extends Activity {
 		
 	}
 	////////////////////////////////////////////////////////////////////////////////////////
-	/**
-	 * Private method for extracting info from field and then serch for its unlockId in the Database.
-	 * @return
-	 */
-	private String searchForUnlockId(){
-		
-		EditText e1 = (EditText) findViewById(R.id.editText1);
-		String lockID = e1.getText().toString();
-		return dao.get(lockID);
-	
-	}
 	/**
 	 * Extracting info from field to
 	 * @return
@@ -174,6 +194,13 @@ public class KeysActivity extends Activity {
 		EditText e1 = (EditText) findViewById(R.id.editText1);
 		return e1.getText().toString();
 	
+	}
+	private String getSelectedLockId(){
+		RadioGroup rg = (RadioGroup) findViewById(999);
+		RadioButton rb = (RadioButton) findViewById(rg.getCheckedRadioButtonId());
+		String string = rb.getText().subSequence(0, 4).toString();
+		Toast.makeText(this, string, Toast.LENGTH_LONG).show();
+		return string;
 	}
 	
 	@Override

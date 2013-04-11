@@ -86,13 +86,11 @@ public class DAO {
 	 
 	 public Map<String,String> getAll(){
 		 Map<String,String> map = new TreeMap<String,String>();
-		 String selectAll = "SELECT " + DBHelper.COLUMN_2 + " FROM " + DBHelper.DATABASE_TABLE_NAME;
+		 String selectAll = "SELECT * FROM " + DBHelper.DATABASE_TABLE_NAME;
 		 Cursor c = database.rawQuery(selectAll,null);
-		 if(c.getCount() != 0){
-			 c.moveToFirst();
+		 if(c.moveToFirst()){
 			 map.put(c.getString(0), c.getString(1));
-			 while(c.getCount() > 0){
-				c.moveToNext();
+			 while(c.moveToNext()){
 				map.put(c.getString(0), c.getString(1));
 			 }
 		 }
