@@ -33,6 +33,8 @@ public class KeysActivity extends Activity {
 	//An instance of the loggingwindows, under the buttons
 	private TextView loggerTextView;
 	
+	private static final int RADIO_GROUP_ID = 999;
+	
 	/**
 	 * Getting a new DAO and prepares it.
 	 */
@@ -53,7 +55,7 @@ public class KeysActivity extends Activity {
 		LinearLayout linearlayout = (LinearLayout) findViewById(R.id.linearlayout1);
 		Map<String,String> map = dao.getAll();
 		RadioGroup rg = new RadioGroup(this);
-		rg.setId(999);
+		rg.setId(RADIO_GROUP_ID);
 
 		RadioButton rd;
 		for (Map.Entry<String, String> entry : map.entrySet()){
@@ -138,17 +140,16 @@ public class KeysActivity extends Activity {
 	 * @param v
 	 */
 	public void delete(View v){
-		String lockId = getSelectedLockId();
+		RadioGroup rg = (RadioGroup) findViewById(RADIO_GROUP_ID);
+		RadioButton rb = (RadioButton) findViewById(rg.getCheckedRadioButtonId());
+		String lockId = rb.getText().subSequence(0, 4).toString();
+		rg.removeView(rb);
 		if (lockId.length() == 4){
 			dao.delete(lockId);
 		}else{
 			Toast.makeText(this, "UnlockId has to be for characters", Toast.LENGTH_SHORT).show();
 		}
-		//Restart to redraw
-		Intent intent = getIntent();
-		finish();
-		startActivity(intent);
-		
+
 	}
 	
 	/**
@@ -157,8 +158,10 @@ public class KeysActivity extends Activity {
 	 * @param v
 	 */
 	public void share(View v){
-		
-		String lockId = getSelectedLockId();
+		RadioGroup rg = (RadioGroup) findViewById(RADIO_GROUP_ID);
+		RadioButton rb = (RadioButton) findViewById(rg.getCheckedRadioButtonId());
+		String lockId = rb.getText().subSequence(0, 4).toString();
+
 		if(lockId.length() == 4){
 			
 			Intent intent = new Intent(this ,ShareActivity.class);
@@ -195,13 +198,7 @@ public class KeysActivity extends Activity {
 		return e1.getText().toString();
 	
 	}
-	private String getSelectedLockId(){
-		RadioGroup rg = (RadioGroup) findViewById(999);
-		RadioButton rb = (RadioButton) findViewById(rg.getCheckedRadioButtonId());
-		String string = rb.getText().subSequence(0, 4).toString();
-		Toast.makeText(this, string, Toast.LENGTH_LONG).show();
-		return string;
-	}
+
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu){
