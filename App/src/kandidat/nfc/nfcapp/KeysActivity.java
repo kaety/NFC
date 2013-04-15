@@ -153,12 +153,17 @@ public class KeysActivity extends Activity {
 	private void delete(){
 		RadioGroup rg = (RadioGroup) findViewById(RADIO_GROUP_ID);
 		RadioButton rb = (RadioButton) findViewById(rg.getCheckedRadioButtonId());
-		String lockId = rb.getText().subSequence(0, 4).toString();
-		rg.removeView(rb);
-		if (lockId.length() == 4){
-			dao.delete(lockId);
+		//Check if a radiobutton was checked
+		if(rb != null){
+			String lockId = rb.getText().subSequence(0, 4).toString();
+			rg.removeView(rb);
+			if (lockId.length() == 4){
+				dao.delete(lockId);
+			}else{
+				Toast.makeText(this, "UnlockId has to be for characters", Toast.LENGTH_SHORT).show();
+			}
 		}else{
-			Toast.makeText(this, "UnlockId has to be for characters", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "You have to choose a key to delete", Toast.LENGTH_LONG).show();
 		}
 	}
 
