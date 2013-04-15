@@ -355,5 +355,6 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	@Override
 	public void onDestroy(){
 		dao.close();
+		super.onDestroy();
 	}
 }
