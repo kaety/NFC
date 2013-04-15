@@ -175,22 +175,27 @@ public class KeysActivity extends Activity {
 	public void share(View v){
 		RadioGroup rg = (RadioGroup) findViewById(RADIO_GROUP_ID);
 		RadioButton rb = (RadioButton) findViewById(rg.getCheckedRadioButtonId());
-		String lockId = rb.getText().subSequence(0, 4).toString();
+		//Check if a RadioButton was checked
+		if(rb != null){
+			String lockId = rb.getText().subSequence(0, 4).toString();
 
-		if(lockId.length() == 4){
+			if(lockId.length() == 4){
 
-			Intent intent = new Intent(this ,ShareActivity.class);
-			intent.putExtra("doorId",lockId);
-			String unlockId = dao.get(lockId);
-			if(unlockId != null){
-				intent.putExtra("key",unlockId);
-				startActivity(intent);
+				Intent intent = new Intent(this ,ShareActivity.class);
+				intent.putExtra("doorId",lockId);
+				String unlockId = dao.get(lockId);
+				if(unlockId != null){
+					intent.putExtra("key",unlockId);
+					startActivity(intent);
+				}else{
+					loggerTextView.setText("Key not found. You can't share a key that does not exist!");
+				}
+
 			}else{
-				loggerTextView.setText("Key not found. You can't share a key that does not exist!");
+				loggerTextView.setText("You must supply a four character long doorId");
 			}
-
 		}else{
-			loggerTextView.setText("You must supply a four character long doorId");
+			Toast.makeText(this, "You have to choose a key",Toast.LENGTH_LONG ).show();
 		}
 
 	}
