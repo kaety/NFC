@@ -78,7 +78,7 @@
         android:inputType="text"
         android:maxLength="4" >
 
-        <requestFocus />
+
     </EditText>
 
     <ScrollView

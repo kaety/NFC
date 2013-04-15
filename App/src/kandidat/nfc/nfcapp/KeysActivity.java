@@ -146,7 +146,8 @@ public class KeysActivity extends Activity {
 	 * @param v
 	 */
 	public void delete(View v){
-		new dialogDeleteFragment();
+//		new dialogDeleteFragment();
+		delete();
 	}
 	
 	private void delete(){
@@ -224,37 +225,17 @@ public class KeysActivity extends Activity {
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			return true;
+		case R.id.keys_create:
+			return true;
+		case R.id.keys_delete:
+			delete();
+			return true;
+		case R.id.keys_search:
+			return true;
+		case R.id.keys_share:
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
-
-	@SuppressLint("ValidFragment")
-	private class dialogDeleteFragment extends DialogFragment {
-		@Override
-		public Dialog onCreateDialog(Bundle savedInstanceState) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			// Get the layout inflater
-			LayoutInflater inflater = getActivity().getLayoutInflater();
-
-			// Inflate and set the layout for the dialog
-			// Pass null as the parent view because its going in the dialog layout
-			builder.setView(inflater.inflate(R.layout.dialog_delete, null))
-			// Add action buttons
-			.setPositiveButton(R.string.dialog_Ok, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int id) {
-					delete();
-				}
-			})
-			.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					dialogDeleteFragment.this.getDialog().cancel();
-				}
-			});      
-			return builder.create();
-		}
-	}
-
 }

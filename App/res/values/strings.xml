@@ -24,7 +24,7 @@
     
     <string name="main_status_red">Status Red</string>
     <string name="main_status_green">Status Green</string>
-    <string name="main_config">Configuration</string>
+    <string name="main_config">Settings</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_Ok">Ok</string>
     
