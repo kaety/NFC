@@ -15,7 +15,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_share">ShareActivity</string>
 
-    <string name="door_id">Which door?</string>
+    <string name="door_id">Name of the Door</string>
     <string name="door_key">Key value</string>
     <string name="keys_create">Create</string>
     <string name="keys_delete">Delete</string>
@@ -25,5 +25,7 @@
     <string name="main_status_red">Status Red</string>
     <string name="main_status_green">Status Green</string>
     <string name="main_config">Configuration</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_Ok">Ok</string>
     
 </resources>

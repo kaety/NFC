@@ -5,8 +5,14 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,9 +38,9 @@ public class KeysActivity extends Activity {
 	private DAO dao;
 	//An instance of the loggingwindows, under the buttons
 	private TextView loggerTextView;
-	
+
 	private static final int RADIO_GROUP_ID = 999;
-	
+
 	/**
 	 * Getting a new DAO and prepares it.
 	 */
@@ -42,15 +48,15 @@ public class KeysActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_keys);
-		
+
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		//getting a new DAO and prepares it
 		dao = new DAO(this);
 		dao.open();
-		
+
 		//Getting the loggingView
 		loggerTextView =(TextView) findViewById(R.id.textView1);
-		
+
 		//Populate the linear layout in the scrollView
 		LinearLayout linearlayout = (LinearLayout) findViewById(R.id.linearlayout1);
 		Map<String,String> map = dao.getAll();
@@ -62,26 +68,26 @@ public class KeysActivity extends Activity {
 			rd = new RadioButton(this);
 			rd.setText(entry.getKey() + "     /    " + entry.getValue());
 			rg.addView(rd);
-			
+
 		}
 		linearlayout.addView(rg);
 
-		
+
 	}
-	
+
 	/**
 	 * Closes connection to database.
 	 */
 	@Override
 	protected void onDestroy(){
-		
+
 		super.onDestroy();
 
 		dao.close();
-		
+
 	}
 
-	
+
 
 	/**
 	 * Called from Button.
@@ -89,26 +95,26 @@ public class KeysActivity extends Activity {
 	 * @param v
 	 */
 	public void createOrChange(View v){
-		
-		String lockID = getLockId();
-	    String unlockID = getUnlockId();
-	    
-	    //Check if all fields have proper length
-	    if(lockID.length() != 4){
-	    	
-	    	loggerTextView.setText("lockId should be a four character String");
-	    	
-	    }else if(unlockID.length() != 4){
-	    	
-	    	loggerTextView.setText("unlockId should be a four character String");
-	    	
-	    }else{
-	    	
 
-	    	dao.insertOrUpdate(lockID,unlockID);
-	    	loggerTextView.setText("Keypair stored");
-	    	
-	    }
+		String lockID = getLockId();
+		String unlockID = getUnlockId();
+
+		//Check if all fields have proper length
+		if(lockID.length() != 4){
+
+			loggerTextView.setText("lockId should be a four character String");
+
+		}else if(unlockID.length() != 4){
+
+			loggerTextView.setText("unlockId should be a four character String");
+
+		}else{
+
+
+			dao.insertOrUpdate(lockID,unlockID);
+			loggerTextView.setText("Keypair stored");
+
+		}
 		//Restart to redraw
 		Intent intent = getIntent();
 		finish();
@@ -120,26 +126,30 @@ public class KeysActivity extends Activity {
 	 * @param v
 	 */
 	public void search(View v){
-		
+
 		String unlockId = dao.get(getLockId());
 		if (unlockId != null){
-			
+
 			loggerTextView.setText("The key is:\n" + unlockId);
-			
+
 		}else{
-			
+
 			loggerTextView.setText("The key is not found");
-			
+
 		}
-		
+
 	}
-	
+
 	/**
 	 * Called from button.
 	 * Just cancels...
 	 * @param v
 	 */
 	public void delete(View v){
+		new dialogDeleteFragment();
+	}
+	
+	private void delete(){
 		RadioGroup rg = (RadioGroup) findViewById(RADIO_GROUP_ID);
 		RadioButton rb = (RadioButton) findViewById(rg.getCheckedRadioButtonId());
 		String lockId = rb.getText().subSequence(0, 4).toString();
@@ -149,9 +159,8 @@ public class KeysActivity extends Activity {
 		}else{
 			Toast.makeText(this, "UnlockId has to be for characters", Toast.LENGTH_SHORT).show();
 		}
-
 	}
-	
+
 	/**
 	 * Called from button.
 	 * Puts doorName and key in an intent and send to a new activity for sharing via Android Beam.
@@ -163,7 +172,7 @@ public class KeysActivity extends Activity {
 		String lockId = rb.getText().subSequence(0, 4).toString();
 
 		if(lockId.length() == 4){
-			
+
 			Intent intent = new Intent(this ,ShareActivity.class);
 			intent.putExtra("doorId",lockId);
 			String unlockId = dao.get(lockId);
@@ -173,11 +182,11 @@ public class KeysActivity extends Activity {
 			}else{
 				loggerTextView.setText("Key not found. You can't share a key that does not exist!");
 			}
-			
+
 		}else{
 			loggerTextView.setText("You must supply a four character long doorId");
 		}
-		
+
 	}
 	////////////////////////////////////////////////////////////////////////////////////////
 	/**
@@ -193,31 +202,59 @@ public class KeysActivity extends Activity {
 	 * @return
 	 */
 	private String getLockId(){
-	
+
 		EditText e1 = (EditText) findViewById(R.id.editText1);
 		return e1.getText().toString();
-	
+
 	}
 
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu){
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.keys_activity, menu);
 		return true;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item){
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            return true;
-        default:
-            return super.onOptionsItemSelected(item);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
+
+	@SuppressLint("ValidFragment")
+	private class dialogDeleteFragment extends DialogFragment {
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			// Get the layout inflater
+			LayoutInflater inflater = getActivity().getLayoutInflater();
+
+			// Inflate and set the layout for the dialog
+			// Pass null as the parent view because its going in the dialog layout
+			builder.setView(inflater.inflate(R.layout.dialog_delete, null))
+			// Add action buttons
+			.setPositiveButton(R.string.dialog_Ok, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int id) {
+					delete();
+				}
+			})
+			.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialogDeleteFragment.this.getDialog().cancel();
+				}
+			});      
+			return builder.create();
+		}
+	}
+
 }
