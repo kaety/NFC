@@ -79,9 +79,9 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 		
 		//Insert values to use with test
 		dao.insertOrUpdate(NFCPMessage.TEST_UNIQUEID, NFCPMessage.TEST_UNLOCKID);
+		dao.insertOrUpdate("bbbb", "aaaa");
 		dao.insertOrUpdate("aaaa", "aaaa");
 		dao.insertOrUpdate("aaab", "aaaa");
-		dao.insertOrUpdate("aaac", "aaaa");
 		dao.insertOrUpdate("aaad", "aaaa");
 		dao.insertOrUpdate("aaae", "aaaa");
 		dao.insertOrUpdate("aaaf", "aaaa");
@@ -94,7 +94,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 		dao.insertOrUpdate("aaam", "aaaa");
 		dao.insertOrUpdate("aaan", "aaaa");
 		dao.insertOrUpdate("aaao", "aaaa");
-		
+		dao.insertOrUpdate("aaac", "aaaa");
 		
 		//Only create a instance of the Krypto class if there is none already
 		if (krypto == null){

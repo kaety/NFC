@@ -66,6 +66,7 @@ public class NFCPMessage {
 	 * @param s raw message
 	 */
 	public NFCPMessage(String s){
+		publicKey = "";
 		if (s.length() >= 11){
 			name = s.substring(0, 2); //2 bytes alltså två ASCII-tecken
 			id = s.substring(2, 4); //2 bytes alltså två ASCII-tecken

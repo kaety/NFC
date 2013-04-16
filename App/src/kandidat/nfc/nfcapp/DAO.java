@@ -86,7 +86,7 @@ public class DAO {
 	 
 	 public Map<String,String> getAll(){
 		 Map<String,String> map = new TreeMap<String,String>();
-		 String selectAll = "SELECT * FROM " + DBHelper.DATABASE_TABLE_NAME;
+		 String selectAll = "SELECT * FROM " + DBHelper.DATABASE_TABLE_NAME + " ORDER BY " + DBHelper.COLUMN_1 + " COLLATE NOCASE";
 		 Cursor c = database.rawQuery(selectAll,null);
 		 if(c.moveToFirst()){
 			 map.put(c.getString(0), c.getString(1));
