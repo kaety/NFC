@@ -17,18 +17,22 @@
             android:orientation="vertical" >
 
             <Button
-                android:id="@+id/button1"
+                android:id="@+id/settings_button_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="toPassword"
-                android:text="Password" />
+                android:text="Password"
+                android:drawableLeft="@drawable/ic_menu_stop"
+                android:gravity="left|center_vertical"/>
 
             <Button
                 android:id="@+id/button2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="toKeys"
-                android:text="Keys" />
+                android:text="Keys" 
+                android:drawableLeft="@drawable/ic_menu_login"
+                android:gravity="left|center_vertical"/>
 
         </LinearLayout>
     </ScrollView>

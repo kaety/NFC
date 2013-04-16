@@ -28,20 +28,21 @@ public final class R {
         public static final int dialog_search=0x7f020004;
         public static final int dialog_share=0x7f020005;
         public static final int ic_launcher=0x7f020006;
-        public static final int ic_menu_btn_add=0x7f020007;
+        public static final int ic_menu_add=0x7f020007;
         public static final int ic_menu_delete=0x7f020008;
-        public static final int ic_menu_preferences=0x7f020009;
-        public static final int ic_menu_search_holo_light=0x7f02000a;
-        public static final int ic_menu_share_holo_light=0x7f02000b;
+        public static final int ic_menu_login=0x7f020009;
+        public static final int ic_menu_manage=0x7f02000a;
+        public static final int ic_menu_search=0x7f02000b;
+        public static final int ic_menu_share=0x7f02000c;
+        public static final int ic_menu_stop=0x7f02000d;
     }
     public static final class id {
         public static final int LinearLayout1=0x7f08000a;
         public static final int action_settings=0x7f080014;
-        public static final int button1=0x7f080008;
         public static final int button2=0x7f080012;
         public static final int door_key=0x7f080013;
-        public static final int editText1=0x7f080007;
-        public static final int editText2=0x7f080006;
+        public static final int editText1=0x7f080006;
+        public static final int editText2=0x7f080005;
         public static final int errorLabel=0x7f080001;
         public static final int imageView1=0x7f080000;
         public static final int keys_create=0x7f080015;
@@ -60,8 +61,9 @@ public final class R {
         public static final int passwordView=0x7f08000d;
         public static final int radioGroup1=0x7f080004;
         public static final int scrollView1=0x7f080002;
+        public static final int settings_button_password=0x7f080008;
         public static final int submitPassword=0x7f080011;
-        public static final int textView1=0x7f080005;
+        public static final int textView1=0x7f080007;
         public static final int title=0x7f08000b;
     }
     public static final class layout {

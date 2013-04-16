@@ -20,7 +20,7 @@
         android:title="@string/main_config" 
         android:visible="true" 
         android:showAsAction="ifRoom|withText"
-        android:icon="@drawable/ic_menu_preferences"
+        android:icon="@drawable/ic_menu_manage"
         android:orderInCategory="100"/>
     
 
