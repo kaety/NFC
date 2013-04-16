@@ -57,7 +57,7 @@ public class LoginActivity extends Activity{
 		Toast toast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
 		toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 
-		EditText passwordInput = (EditText) findViewById(R.id.editText1);
+		EditText passwordInput = (EditText) findViewById(R.id.login_password);
 		String input = passwordInput.getText().toString();
 
 		if (input.equals("")) {

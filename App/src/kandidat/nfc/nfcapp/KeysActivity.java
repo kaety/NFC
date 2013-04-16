@@ -39,8 +39,6 @@ public class KeysActivity extends Activity {
 	//An instance of the loggingwindows, under the buttons
 	private TextView loggerTextView;
 
-	private static final int RADIO_GROUP_ID = 999;
-
 	/**
 	 * Getting a new DAO and prepares it.
 	 */
@@ -60,8 +58,7 @@ public class KeysActivity extends Activity {
 		//Populate the linear layout in the scrollView
 		LinearLayout linearlayout = (LinearLayout) findViewById(R.id.linearlayout1);
 		Map<String,String> map = dao.getAll();
-		RadioGroup rg = new RadioGroup(this);
-		rg.setId(RADIO_GROUP_ID);
+		RadioGroup rg = (RadioGroup)findViewById(R.id.radioGroup1);
 
 		RadioButton rd;
 		for (Map.Entry<String, String> entry : map.entrySet()){
@@ -70,7 +67,6 @@ public class KeysActivity extends Activity {
 			rg.addView(rd);
 
 		}
-		linearlayout.addView(rg);
 
 
 	}
@@ -94,7 +90,7 @@ public class KeysActivity extends Activity {
 	 * Creates or changes key for given door and key.
 	 * @param v
 	 */
-	public void createOrChange(View v){
+	public void createOrChange(){
 
 		String lockID = getLockId();
 		String unlockID = getUnlockId();
@@ -125,7 +121,7 @@ public class KeysActivity extends Activity {
 	 * Searches and displays the key for chosen door.
 	 * @param v
 	 */
-	public void search(View v){
+	public void search(){
 
 		String unlockId = dao.get(getLockId());
 		if (unlockId != null){
@@ -140,18 +136,18 @@ public class KeysActivity extends Activity {
 
 	}
 
-	/**
-	 * Called from button.
-	 * Just cancels...
-	 * @param v
-	 */
-	public void delete(View v){
-//		new dialogDeleteFragment();
-		delete();
-	}
+//	/**
+//	 * Called from button.
+//	 * Just cancels...
+//	 * @param v
+//	 */
+//	public void delete(View v){
+////		new dialogDeleteFragment();
+//		delete();
+//	}
 	
 	private void delete(){
-		RadioGroup rg = (RadioGroup) findViewById(RADIO_GROUP_ID);
+		RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroup1);
 		RadioButton rb = (RadioButton) findViewById(rg.getCheckedRadioButtonId());
 		//Check if a radiobutton was checked
 		if(rb != null){
@@ -172,8 +168,8 @@ public class KeysActivity extends Activity {
 	 * Puts doorName and key in an intent and send to a new activity for sharing via Android Beam.
 	 * @param v
 	 */
-	public void share(View v){
-		RadioGroup rg = (RadioGroup) findViewById(RADIO_GROUP_ID);
+	public void share(){
+		RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroup1);
 		RadioButton rb = (RadioButton) findViewById(rg.getCheckedRadioButtonId());
 		//Check if a RadioButton was checked
 		if(rb != null){
@@ -236,13 +232,16 @@ public class KeysActivity extends Activity {
 			startActivity(intent);
 			return true;
 		case R.id.keys_create:
+			createOrChange();
 			return true;
 		case R.id.keys_delete:
 			delete();
 			return true;
 		case R.id.keys_search:
+			search();
 			return true;
 		case R.id.keys_share:
+			share();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
