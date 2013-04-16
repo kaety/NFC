@@ -37,7 +37,7 @@ public final class R {
     public static final class id {
         public static final int LinearLayout1=0x7f08000a;
         public static final int action_settings=0x7f080014;
-        public static final int button1=0x7f080009;
+        public static final int button1=0x7f080008;
         public static final int button2=0x7f080012;
         public static final int door_key=0x7f080013;
         public static final int editText1=0x7f080007;
@@ -49,7 +49,7 @@ public final class R {
         public static final int keys_search=0x7f080017;
         public static final int keys_share=0x7f080018;
         public static final int linearlayout1=0x7f080003;
-        public static final int login_password=0x7f080008;
+        public static final int login_password=0x7f080009;
         public static final int main_config=0x7f08001b;
         public static final int main_status_green=0x7f08001a;
         public static final int main_status_red=0x7f080019;

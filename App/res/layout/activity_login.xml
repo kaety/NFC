@@ -4,27 +4,24 @@
     android:layout_height="match_parent"
     tools:context=".LoginActivity" >
 
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_password"
+        android:layout_centerHorizontal="true"
+        android:onClick="unlockPressed"
+        android:text="Unlock" />
+
     <EditText
         android:id="@+id/login_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="69dp"
         android:ems="10"
-        android:maxLength="10"
-        android:inputType="numberPassword" >
-
-        <requestFocus />
-    </EditText>
-
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/editText1"
-        android:layout_below="@+id/editText1"
-        android:onClick="unlockPressed"
-        android:text="Unlock" />
+        android:inputType="numberPassword"
+        android:maxLength="10" />
 
 </RelativeLayout>

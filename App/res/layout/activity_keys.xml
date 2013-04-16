@@ -24,9 +24,7 @@
             <RadioGroup
                 android:id="@+id/radioGroup1"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:divider="true"
-                android: >
+                android:layout_height="wrap_content">
             </RadioGroup>
         </LinearLayout>
     </ScrollView>
