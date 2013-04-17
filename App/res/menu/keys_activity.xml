@@ -4,10 +4,10 @@
     <item 
         android:id="@+id/keys_create" 
         android:visible="true" 
-        android:icon="@drawable/ic_menu_btn_add" 
+        android:icon="@drawable/ic_menu_add" 
         android:orderInCategory="10" 
         android:enabled="true" 
-        android:showAsAction="ifRoom|withText" 
+        android:showAsAction="ifRoom" 
         android:title="@string/keys_create"/>
 
     <item 
@@ -16,26 +16,26 @@
         android:icon="@drawable/ic_menu_delete" 
         android:orderInCategory="100" 
         android:enabled="true"
-        android:showAsAction="ifRoom|withText" 
+        android:showAsAction="ifRoom" 
         android:title="@string/keys_delete"/>
        
     
     <item
         android:id="@+id/keys_search"
 		android:visible="true"
-		android:icon="@drawable/ic_menu_search_holo_light"
+		android:icon="@drawable/ic_menu_search"
 		android:orderInCategory="50"
 		android:enabled="true"
-		android:showAsAction="ifRoom|withText" 
+		android:showAsAction="ifRoom" 
 		android:title="@string/keys_search"/>
     
     <item
         android:id="@+id/keys_share" 
         android:orderInCategory="70" 
         android:visible="true" 
-        android:icon="@drawable/ic_menu_share_holo_light" 
+        android:icon="@drawable/ic_menu_share" 
         android:enabled="true" 
-        android:showAsAction="ifRoom|withText" 
+        android:showAsAction="ifRoom" 
         android:title="@string/keys_share"/>
 
 </menu>
