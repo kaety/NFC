@@ -1,5 +1,6 @@
 package kandidat.nfc.nfcapp;
 
+import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -20,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.TextView;
 import android.widget.Toast;
 /**
@@ -81,25 +83,22 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 		dao.insertOrUpdate(NFCPMessage.TEST_UNIQUEID, NFCPMessage.TEST_UNLOCKID);
 		dao.insertOrUpdate("bbbb", "aaaa");
 		dao.insertOrUpdate("aaaa", "aaaa");
-		dao.insertOrUpdate("aaab", "aaaa");
-		dao.insertOrUpdate("aaad", "aaaa");
-		dao.insertOrUpdate("aaae", "aaaa");
-		dao.insertOrUpdate("aaaf", "aaaa");
-		dao.insertOrUpdate("aaag", "aaaa");
-		dao.insertOrUpdate("aaah", "aaaa");
-		dao.insertOrUpdate("aaai", "aaaa");
-		dao.insertOrUpdate("aaaj", "aaaa");
-		dao.insertOrUpdate("aaak", "aaaa");
-		dao.insertOrUpdate("aaal", "aaaa");
-		dao.insertOrUpdate("aaam", "aaaa");
-		dao.insertOrUpdate("aaan", "aaaa");
-		dao.insertOrUpdate("aaao", "aaaa");
-		dao.insertOrUpdate("aaac", "aaaa");
 		
 		//Only create a instance of the Krypto class if there is none already
 		if (krypto == null){
 			krypto = new Krypto();
 		}
+		
+	    try {
+	        ViewConfiguration config = ViewConfiguration.get(this);
+	        Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+	        if(menuKeyField != null) {
+	            menuKeyField.setAccessible(true);
+	            menuKeyField.setBoolean(config, false);
+	        }
+	    } catch (Exception ex) {
+	        // Ignore
+	    }
 	}
 
 	/**

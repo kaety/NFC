@@ -1,24 +1,17 @@
 package kandidat.nfc.nfcapp;
 
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
+import kandidat.nfc.nfcapp.KeysDialogDelete.KeysDialogInterface;
 
 import android.os.Bundle;
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+//import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -32,7 +25,7 @@ import android.widget.Toast;
  * @author Fredrik
  *
  */
-public class KeysActivity extends Activity {
+public class KeysActivity extends Activity implements KeysDialogInterface {
 
 	//Database Access Object
 	private DAO dao;
@@ -56,7 +49,7 @@ public class KeysActivity extends Activity {
 		loggerTextView =(TextView) findViewById(R.id.textView1);
 
 		//Populate the linear layout in the scrollView
-		LinearLayout linearlayout = (LinearLayout) findViewById(R.id.linearlayout1);
+//		LinearLayout linearlayout = (LinearLayout) findViewById(R.id.linearlayout1);
 		Map<String,String> map = dao.getAll();
 		RadioGroup rg = (RadioGroup)findViewById(R.id.radioGroup1);
 
@@ -232,13 +225,18 @@ public class KeysActivity extends Activity {
 			startActivity(intent);
 			return true;
 		case R.id.keys_create:
-			createOrChange();
+			showCreateDialog();
+//			createOrChange();
 			return true;
 		case R.id.keys_delete:
+			showDeleteDialog();
+			// Skapa respons från dialogen.
 			delete();
+			Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.keys_search:
-			search();
+			showSearchDialog();
+//			search();
 			return true;
 		case R.id.keys_share:
 			share();
@@ -246,5 +244,26 @@ public class KeysActivity extends Activity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	public void showCreateDialog() {
+	    DialogFragment newFragment = new KeysDialogCreate();
+	    newFragment.show(getFragmentManager(), "Create");
+	}
+	
+	public void showDeleteDialog() {
+	    DialogFragment newFragment = new KeysDialogDelete();
+	    newFragment.show(getFragmentManager(), "Delete");
+	}
+	
+	public void showSearchDialog() {
+	    DialogFragment newFragment = new KeysDialogSearch();
+	    newFragment.show(getFragmentManager(), "Search");
+	}
+
+	@Override
+	public void onChoose() {
+		finish();
+		
 	}
 }
