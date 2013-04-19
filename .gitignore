@@ -2,3 +2,5 @@
 *.apk
 App/bin
 App/gen
+.dex
+.ap_
