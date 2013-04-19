@@ -39,9 +39,12 @@
         android:layout_alignLeft="@+id/editText1"
         android:layout_alignParentBottom="true"
         android:ems="10"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:hint="The key..."
         android:inputType="text"
-        android:maxLength="4" />
+        android:maxLength="4"
+        android:visibility="invisible" />
 
     <EditText
         android:id="@+id/editText1"
@@ -49,9 +52,12 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/editText2"
         android:ems="10"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:hint="Which door?"
         android:inputType="text"
-        android:maxLength="4" >
+        android:maxLength="4"
+        android:visibility="invisible" >
 
         <requestFocus />
     </EditText>
@@ -62,6 +68,9 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/editText1"
         android:layout_alignLeft="@+id/editText1"
-        android:text="TextView" />
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text="TextView"
+        android:visibility="invisible" />
 
 </RelativeLayout>
