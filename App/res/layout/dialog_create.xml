@@ -5,13 +5,13 @@
     android:orientation="vertical" >
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/image_dialog_create"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/dialog_create" />
 
     <EditText
-        android:id="@+id/door_key"
+        android:id="@+id/dialog_door_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -21,7 +21,7 @@
     </EditText>
 
     <EditText
-        android:id="@+id/door_key"
+        android:id="@+id/dialog_door_key"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"

@@ -1,7 +1,9 @@
 package kandidat.nfc.nfcapp;
 
 import java.util.Map;
-import kandidat.nfc.nfcapp.KeysDialogDelete.KeysDialogInterface;
+
+import kandidat.nfc.nfcapp.KeysDialogCreate.DialogCreateInterface;
+import kandidat.nfc.nfcapp.KeysDialogDelete.DialogDeleteInterface;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -25,7 +27,7 @@ import android.widget.Toast;
  * @author Fredrik
  *
  */
-public class KeysActivity extends Activity implements KeysDialogInterface {
+public class KeysActivity extends Activity implements DialogDeleteInterface, DialogCreateInterface {
 
 	//Database Access Object
 	private DAO dao;
@@ -83,10 +85,10 @@ public class KeysActivity extends Activity implements KeysDialogInterface {
 	 * Creates or changes key for given door and key.
 	 * @param v
 	 */
-	public void createOrChange(){
+	public void createOrChange(String lockID, String unlockID){
 
-		String lockID = getLockId();
-		String unlockID = getUnlockId();
+//		String lockID = getLockId();
+//		String unlockID = getUnlockId();
 
 		//Check if all fields have proper length
 		if(lockID.length() != 4){
@@ -226,17 +228,12 @@ public class KeysActivity extends Activity implements KeysDialogInterface {
 			return true;
 		case R.id.keys_create:
 			showCreateDialog();
-//			createOrChange();
 			return true;
 		case R.id.keys_delete:
 			showDeleteDialog();
-			// Skapa respons från dialogen.
-			delete();
-			Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
 			return true;
 		case R.id.keys_search:
 			showSearchDialog();
-//			search();
 			return true;
 		case R.id.keys_share:
 			share();
@@ -262,8 +259,28 @@ public class KeysActivity extends Activity implements KeysDialogInterface {
 	}
 
 	@Override
-	public void onChoose() {
-		finish();
+	public void onDialogCreatePositiveClick(DialogFragment dialog, String door,
+			String key) {
+		createOrChange(door,key);
+		dialog.dismiss();
+	}
+
+	@Override
+	public void onDialogCreateNegativeClick(DialogFragment dialog) {
+		dialog.dismiss();
+	}
+
+	@Override
+	public void onDialogDeletePositiveClick(DialogFragment dialog) {
+		delete();
+		dialog.dismiss();
+		Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onDialogDeleteNegativeClick(DialogFragment dialog) {
+		dialog.dismiss();
 		
 	}
+
 }

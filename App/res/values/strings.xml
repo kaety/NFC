@@ -27,5 +27,6 @@
     <string name="main_config">Settings</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_Ok">Ok</string>
+    <string name="dialog_create">Create</string>
     
 </resources>

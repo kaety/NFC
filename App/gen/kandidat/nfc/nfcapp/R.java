@@ -38,22 +38,23 @@ public final class R {
     }
     public static final class id {
         public static final int LinearLayout1=0x7f08000a;
-        public static final int action_settings=0x7f080014;
+        public static final int action_settings=0x7f080015;
         public static final int button2=0x7f080012;
-        public static final int door_key=0x7f080013;
+        public static final int dialog_door_id=0x7f080013;
+        public static final int dialog_door_key=0x7f080014;
         public static final int editText1=0x7f080006;
         public static final int editText2=0x7f080005;
         public static final int errorLabel=0x7f080001;
-        public static final int imageView1=0x7f080000;
-        public static final int keys_create=0x7f080015;
-        public static final int keys_delete=0x7f080016;
-        public static final int keys_search=0x7f080017;
-        public static final int keys_share=0x7f080018;
+        public static final int image_dialog_create=0x7f080000;
+        public static final int keys_create=0x7f080016;
+        public static final int keys_delete=0x7f080017;
+        public static final int keys_search=0x7f080018;
+        public static final int keys_share=0x7f080019;
         public static final int linearlayout1=0x7f080003;
         public static final int login_password=0x7f080009;
-        public static final int main_config=0x7f08001b;
-        public static final int main_status_green=0x7f08001a;
-        public static final int main_status_red=0x7f080019;
+        public static final int main_config=0x7f08001c;
+        public static final int main_status_green=0x7f08001b;
+        public static final int main_status_red=0x7f08001a;
         public static final int message=0x7f08000c;
         public static final int oldpassword=0x7f080010;
         public static final int passwordConfirm=0x7f08000f;
@@ -93,6 +94,7 @@ public final class R {
         public static final int button_settings=0x7f050001;
         public static final int dialog_Ok=0x7f050017;
         public static final int dialog_cancel=0x7f050016;
+        public static final int dialog_create=0x7f050018;
         public static final int door_id=0x7f05000d;
         public static final int door_key=0x7f05000e;
         public static final int hello_world=0x7f05000b;
