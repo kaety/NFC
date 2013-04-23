@@ -58,7 +58,7 @@ public class KeysActivity extends Activity implements DialogDeleteInterface, Dia
 		RadioButton rd;
 		for (Map.Entry<String, String> entry : map.entrySet()){
 			rd = new RadioButton(this);
-			rd.setText("Door:     " + entry.getKey() + "  ||   Key:     " + entry.getValue());
+			rd.setText(entry.getKey() + " || " + entry.getValue());
 			rg.addView(rd);
 
 		}
@@ -163,11 +163,13 @@ public class KeysActivity extends Activity implements DialogDeleteInterface, Dia
 					intent.putExtra("key",unlockId);
 					startActivity(intent);
 				}else{
-					loggerTextView.setText("Key not found. You can't share a key that does not exist!");
+//					loggerTextView.setText("Key not found. You can't share a key that does not exist!");
+					Toast.makeText(this,"Key not found. You can't share a key that does not exist!",Toast.LENGTH_SHORT).show();
 				}
 
 			}else{
 				loggerTextView.setText("You must supply a four character long doorId");
+				Toast.makeText(this, "You must supply a four character long doorId",Toast.LENGTH_SHORT ).show();
 			}
 		}else{
 			Toast.makeText(this, "You have to choose a key",Toast.LENGTH_LONG ).show();
