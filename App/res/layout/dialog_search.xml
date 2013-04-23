@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scaleType="fitXY"
-        android:src="@drawable/dialog_create" />
+        android:src="@drawable/dialog_search" />
 
     <EditText
         android:id="@+id/dialog_door_id"
@@ -21,11 +21,5 @@
         <requestFocus />
     </EditText>
 
-    <EditText
-        android:id="@+id/dialog_door_key"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/door_key" />
 
 </LinearLayout>

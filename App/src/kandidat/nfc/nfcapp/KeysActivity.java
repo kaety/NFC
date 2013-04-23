@@ -4,6 +4,7 @@ import java.util.Map;
 
 import kandidat.nfc.nfcapp.KeysDialogCreate.DialogCreateInterface;
 import kandidat.nfc.nfcapp.KeysDialogDelete.DialogDeleteInterface;
+import kandidat.nfc.nfcapp.KeysDialogSearch.DialogSearchInterface;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -19,7 +20,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//TODO Delete needs to be added
 
 /**
  * Handles the Database of keys.
@@ -27,7 +27,7 @@ import android.widget.Toast;
  * @author Fredrik
  *
  */
-public class KeysActivity extends Activity implements DialogDeleteInterface, DialogCreateInterface {
+public class KeysActivity extends Activity implements DialogDeleteInterface, DialogCreateInterface, DialogSearchInterface {
 
 	//Database Access Object
 	private DAO dao;
@@ -58,7 +58,7 @@ public class KeysActivity extends Activity implements DialogDeleteInterface, Dia
 		RadioButton rd;
 		for (Map.Entry<String, String> entry : map.entrySet()){
 			rd = new RadioButton(this);
-			rd.setText(entry.getKey() + "     /    " + entry.getValue());
+			rd.setText("Door:     " + entry.getKey() + "  ||   Key:     " + entry.getValue());
 			rg.addView(rd);
 
 		}
@@ -78,8 +78,6 @@ public class KeysActivity extends Activity implements DialogDeleteInterface, Dia
 
 	}
 
-
-
 	/**
 	 * Called from Button.
 	 * Creates or changes key for given door and key.
@@ -89,22 +87,17 @@ public class KeysActivity extends Activity implements DialogDeleteInterface, Dia
 
 //		String lockID = getLockId();
 //		String unlockID = getUnlockId();
-
-		//Check if all fields have proper length
+//		Check if all fields have proper length
 		if(lockID.length() != 4){
-
-			loggerTextView.setText("lockId should be a four character String");
-
+//			loggerTextView.setText("lockId should be a four character String");
+			Toast.makeText(this, "Door should be four characters long", Toast.LENGTH_SHORT).show();
 		}else if(unlockID.length() != 4){
-
-			loggerTextView.setText("unlockId should be a four character String");
-
+//			loggerTextView.setText("unlockId should be a four character String");
+			Toast.makeText(this, "Key should be four characters long", Toast.LENGTH_SHORT).show();
 		}else{
-
-
 			dao.insertOrUpdate(lockID,unlockID);
-			loggerTextView.setText("Keypair stored");
-
+//			loggerTextView.setText("Keypair stored");
+			Toast.makeText(this, "Keypair stored", Toast.LENGTH_SHORT).show();
 		}
 		//Restart to redraw
 		Intent intent = getIntent();
@@ -116,31 +109,24 @@ public class KeysActivity extends Activity implements DialogDeleteInterface, Dia
 	 * Searches and displays the key for chosen door.
 	 * @param v
 	 */
-	public void search(){
+	public void search(String unlockId){
 
-		String unlockId = dao.get(getLockId());
+		unlockId = dao.get(unlockId);
 		if (unlockId != null){
-
-			loggerTextView.setText("The key is:\n" + unlockId);
-
+//			loggerTextView.setText("The key is:\n" + unlockId);
+			Toast.makeText(this, "The key is: " + unlockId, Toast.LENGTH_LONG).show();
 		}else{
-
-			loggerTextView.setText("The key is not found");
-
+//			loggerTextView.setText("The key is not found");
+			Toast.makeText(this, "The key is not found", Toast.LENGTH_SHORT).show();
 		}
 
 	}
 
-//	/**
-//	 * Called from button.
-//	 * Just cancels...
-//	 * @param v
-//	 */
-//	public void delete(View v){
-////		new dialogDeleteFragment();
-//		delete();
-//	}
-	
+	/**
+	 * Called from button.
+	 * Just cancels...
+	 * @param v
+	 */
 	private void delete(){
 		RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroup1);
 		RadioButton rb = (RadioButton) findViewById(rg.getCheckedRadioButtonId());
@@ -153,8 +139,6 @@ public class KeysActivity extends Activity implements DialogDeleteInterface, Dia
 			}else{
 				Toast.makeText(this, "UnlockId has to be for characters", Toast.LENGTH_SHORT).show();
 			}
-		}else{
-			Toast.makeText(this, "You have to choose a key to delete", Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -190,25 +174,22 @@ public class KeysActivity extends Activity implements DialogDeleteInterface, Dia
 		}
 
 	}
-	////////////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * Extracting info from field to
 	 * @return
 	 */
-	private String getUnlockId(){
-		EditText e1 = (EditText) findViewById(R.id.editText2);
-		return e1.getText().toString();
-	}
-	/**
-	 * Extracting info from field 1
-	 * @return
-	 */
-	private String getLockId(){
-
-		EditText e1 = (EditText) findViewById(R.id.editText1);
-		return e1.getText().toString();
-
-	}
+//	private String getUnlockId(){
+//		EditText e1 = (EditText) findViewById(R.id.editText2);
+//		return e1.getText().toString();
+//	}
+//	/**
+//	 * Extracting info from field 1
+//	 * @return
+//	 */
+//	private String getLockId(){
+//		EditText e1 = (EditText) findViewById(R.id.editText1);
+//		return e1.getText().toString();
+//	}
 
 
 	@Override
@@ -230,7 +211,13 @@ public class KeysActivity extends Activity implements DialogDeleteInterface, Dia
 			showCreateDialog();
 			return true;
 		case R.id.keys_delete:
-			showDeleteDialog();
+			RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroup1);
+			RadioButton rb = (RadioButton) findViewById(rg.getCheckedRadioButtonId());
+			if(rb != null){
+				showDeleteDialog();
+			}else{
+				Toast.makeText(this, "You have to choose a key to delete", Toast.LENGTH_LONG).show();
+			}
 			return true;
 		case R.id.keys_search:
 			showSearchDialog();
@@ -242,45 +229,48 @@ public class KeysActivity extends Activity implements DialogDeleteInterface, Dia
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
 	public void showCreateDialog() {
 	    DialogFragment newFragment = new KeysDialogCreate();
 	    newFragment.show(getFragmentManager(), "Create");
 	}
-	
 	public void showDeleteDialog() {
 	    DialogFragment newFragment = new KeysDialogDelete();
 	    newFragment.show(getFragmentManager(), "Delete");
 	}
-	
 	public void showSearchDialog() {
 	    DialogFragment newFragment = new KeysDialogSearch();
 	    newFragment.show(getFragmentManager(), "Search");
 	}
-
 	@Override
-	public void onDialogCreatePositiveClick(DialogFragment dialog, String door,
-			String key) {
+	public void onDialogCreatePositiveClick(DialogFragment dialog, String door, String key) {
 		createOrChange(door,key);
 		dialog.dismiss();
 	}
-
 	@Override
 	public void onDialogCreateNegativeClick(DialogFragment dialog) {
 		dialog.dismiss();
 	}
-
 	@Override
 	public void onDialogDeletePositiveClick(DialogFragment dialog) {
 		delete();
 		dialog.dismiss();
 		Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show();
 	}
-
 	@Override
 	public void onDialogDeleteNegativeClick(DialogFragment dialog) {
 		dialog.dismiss();
 		
+	}
+
+	@Override
+	public void onDialogSearchPositiveClick(DialogFragment dialog, String door) {
+		search(door);
+		dialog.dismiss();
+	}
+
+	@Override
+	public void onDialogSearchNegativeClick(DialogFragment dialog) {
+		dialog.dismiss();
 	}
 
 }
