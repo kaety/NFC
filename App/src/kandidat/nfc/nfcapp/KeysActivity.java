@@ -9,7 +9,9 @@ import kandidat.nfc.nfcapp.KeysDialogSearch.DialogSearchInterface;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.app.TaskStackBuilder;
 import android.content.Intent;
+import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -205,10 +207,15 @@ public class KeysActivity extends Activity implements DialogDeleteInterface, Dia
 	public boolean onOptionsItemSelected(MenuItem item){
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			Intent intent = new Intent(this, MainActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
-			return true;
+            // This is called when the Home (Up) button is pressed
+            // in the Action Bar.
+            Intent parentActivityIntent = new Intent(this, SettingsActivity.class);
+            parentActivityIntent.addFlags(
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                    Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(parentActivityIntent);
+            finish();
+            return true;
 		case R.id.keys_create:
 			showCreateDialog();
 			return true;

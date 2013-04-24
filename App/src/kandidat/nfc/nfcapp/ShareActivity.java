@@ -8,6 +8,7 @@ import android.nfc.NfcAdapter.CreateNdefMessageCallback;
 import android.nfc.NfcEvent;
 import android.nfc.security.Krypto;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Toast;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -40,7 +41,7 @@ public class ShareActivity extends Activity implements CreateNdefMessageCallback
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_share);
-		
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		//Gets the NFCAdapter and prepares class for beaming NDEF
 		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -120,4 +121,22 @@ public class ShareActivity extends Activity implements CreateNdefMessageCallback
 	    }
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item){
+		switch (item.getItemId()) {
+		case android.R.id.home:
+            // This is called when the Home (Up) button is pressed
+            // in the Action Bar.
+            Intent parentActivityIntent = new Intent(this, KeysActivity.class);
+            parentActivityIntent.addFlags(
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                    Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(parentActivityIntent);
+            finish();
+            return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
 }

@@ -2,18 +2,22 @@
 <resources>
 
     <string name="app_name">NFC Keys</string>
+    
     <string name="button_settings">Settings</string>
     <string name="button_send">Unlock</string>
-    <string name="title_activity_access">NFC Keys</string>
+
     <string name="access_granted">ACCESS GRANTED</string>
-    <string name="title_activity_denied">NFC Keys</string>
     <string name="access_denied">ACCESS DENIED</string>
-    <string name="title_activity_login">NFC Keys</string>
-    <string name="title_activity_settings">NFC Keys</string>
-    <string name="title_activity_keys">Key Ring</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_share">Share Key</string>
+    
+    <string name="title_activity_access"   >NFC Keys</string>
+    <string name="title_activity_denied"   >NFC Keys</string>
+    <string name="title_activity_login"    >NFC Keys</string>
+    <string name="title_activity_settings" >Home</string>
+    <string name="title_activity_keys"     >Back to settings</string>
+    <string name="title_activity_share"    >Back to Key ring</string>
+    <string name="title_activity_password" >Back to settings</string>
 
     <string name="door_id">Name of the Door</string>
     <string name="door_key">Key value</string>
@@ -26,7 +30,7 @@
     <string name="main_status_green">Status Green</string>
     <string name="main_config">Settings</string>
     <string name="dialog_cancel">Cancel</string>
-    <string name="dialog_Ok">Ok</string>
+    <string name="dialog_Ok">OK</string>
     <string name="dialog_create">Create</string>
     
 </resources>
