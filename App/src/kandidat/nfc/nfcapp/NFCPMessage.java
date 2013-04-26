@@ -8,7 +8,7 @@ public class NFCPMessage {
 	public static final String TEST_UNLOCKID = "Anna";
 	public static final String TEST_UNIQUEID = TEST_NAME + TEST_ID;
 
-	//The three types of message
+	//The four types of message 
 	public static final String MESSAGE_TYPE_BEACON = "1";
 	public static final String MESSAGE_TYPE_UNLOCK = "2";
 	public static final String MESSAGE_TYPE_RESULT = "3";
@@ -35,6 +35,7 @@ public class NFCPMessage {
 	private String errorCode;//1 byte //Only checked if status = "1"
 	private String unlockId; //4 bytes
 	private String publicKey; //This will be added if message is of type 1
+	private String randomMsg;//Long will vary in size
 	
 	
 	//Constructor Type2 Message
@@ -47,6 +48,7 @@ public class NFCPMessage {
 		this.errorCode = errorCode;
 		this.unlockId = unlockId;
 		this.publicKey = "";
+		this.randomMsg = "";
 	}
 	
 	//Constructor Type1 Message
@@ -57,8 +59,9 @@ public class NFCPMessage {
 		this.status = status;
 		this.typeOfMessage = typeOfMessage;
 		this.errorCode = errorCode;
-		this.unlockId = "    ";
+		this.unlockId = "";
 		this.publicKey = "";
+		this.randomMsg="";
 	}
 	
 	/**
@@ -80,7 +83,8 @@ public class NFCPMessage {
 			}else{
 				unlockId = s.substring(7, 11); //4 bytes
 				if(s.length() > 11){
-					publicKey = s.substring(11);
+					publicKey = s.substring(11,139); 
+					randomMsg = s.substring(139);
 				}
 			}
 		}
@@ -136,6 +140,11 @@ public class NFCPMessage {
 			return publicKey;
 		}
 	}
+	
+	public String getRandomMsg(){
+		return randomMsg;
+	}
+	
 	public void setPublicKey(String publicKey){
 		this.publicKey = publicKey;
 	}

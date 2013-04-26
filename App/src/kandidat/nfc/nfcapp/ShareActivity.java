@@ -6,33 +6,33 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcAdapter.CreateNdefMessageCallback;
 import android.nfc.NfcEvent;
-import android.nfc.security.Krypto;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
+
+
 /**
- * This activity is started from KeysActivity and it is intended to share a specific key.
- * This can be done either secure or not.
- * If it is supposed to be done securely to sending phone must be in controll of the other phones public RSA-key
+ * This activity is started from KeysActivity and it is intended to share a
+ * specific key. This can be done either secure or not. If it is supposed to be
+ * done securely to sending phone must be in controll of the other phones public
+ * RSA-key
+ * 
  * @author Fredrik
  */
-public class ShareActivity extends Activity implements CreateNdefMessageCallback {
+public class ShareActivity extends Activity implements
+		CreateNdefMessageCallback {
 
-	//The four bytes unique identifier for a door
+	// The four bytes unique identifier for a door
 	private String doorId;
-	//The four bytes key for the door
+	// The four bytes key for the door
 	private String unlockId;
-	//Communication object
+	// Communication object
 	private NfcAdapter nfcAdapter;
-	//The receiving phones public key
-	private String publicKey;
-	
+	// The receiving phones public key
+
 	private NFCPMessage sendMsg;
-	
+
 	@Override
 	/**
 	 * Gets the information from calling intent such as doorId, key, 
@@ -43,100 +43,81 @@ public class ShareActivity extends Activity implements CreateNdefMessageCallback
 		setContentView(R.layout.activity_share);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		//Gets the NFCAdapter and prepares class for beaming NDEF
+		// Gets the NFCAdapter and prepares class for beaming NDEF
 		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 		nfcAdapter.setNdefPushMessageCallback(this, this);
-		
 
-		if (sendMsg == null){
+		if (sendMsg == null) {
 			prepareNdefMessage();
 		}
 	}
+
 	/**
-	 * Called from oncreate the prepare the message when the activity is created instead of when it is needed
+	 * Called from oncreate the prepare the message when the activity is created
+	 * instead of when it is needed
 	 */
-	public void prepareNdefMessage(){
+	public void prepareNdefMessage() {
 		// Getting information
 		Intent intent = getIntent();
 		doorId = intent.getStringExtra("doorId");
 		unlockId = intent.getStringExtra("key");
-		
-		//Getting public key from shared prefs if it exist else null
-		SharedPreferences pref = this.getSharedPreferences("publicKey", 1);
-		publicKey = pref.getString("publicKey", null);
-		
-		//Using our protocol
-		sendMsg = new NFCPMessage(doorId.substring(0,2), doorId.substring(2),
-				NFCPMessage.STATUS_OK, NFCPMessage.MESSAGE_TYPE_SHARE, NFCPMessage.ERROR_NONE, unlockId);
-		
-		//if public key is found encrypt unlockId and put it back
-		if (publicKey != null){
-			unlockId = sendMsg.getUnlockId();
-			Krypto krypto = new Krypto(publicKey);
-			unlockId = krypto.encryptMessage(unlockId);
-			sendMsg.setUnlockId(unlockId);
-		}else{
-			sendMsg.setErrorCode(NFCPMessage.ERROR_NO_SECURITY);
-		}
-		
-		/*new AlertDialog.Builder(this)
-		.setTitle("Display encrypted unlockId")
-		.setMessage("unlockId: " + unlockId)
-		.setNegativeButton(android.R.string.no, null).show();*/	
+
+		// Using our protocol
+		sendMsg = new NFCPMessage(doorId.substring(0, 2), doorId.substring(2),
+				NFCPMessage.STATUS_OK, NFCPMessage.MESSAGE_TYPE_SHARE,
+				NFCPMessage.ERROR_NONE, unlockId);
 	}
-	
 
 	/**
-	 * Automatic call.
-	 * Creates an NDEF and encrypts the unlockId if there is a public key found
+	 * Automatic call. Creates an NDEF and encrypts the unlockId if there is a
+	 * public key found
 	 */
 	@Override
 	public NdefMessage createNdefMessage(NfcEvent arg0) {
-		//Create record
+		// Create record
 		NdefRecord record = new NdefRecord(NdefRecord.TNF_MIME_MEDIA,
 				"text/plain".getBytes(Charset.forName("US-ASCII")),
 				new byte[0], sendMsg.toString().getBytes(
 						Charset.forName("US-ASCII")));
 		return new NdefMessage(new NdefRecord[] { record });
 	}
-	
+
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-	    // Save the user's state
-		if (doorId != null && unlockId != null){
+		// Save the user's state
+		if (doorId != null && unlockId != null) {
 			savedInstanceState.putString("doorId", doorId);
 			savedInstanceState.putString("unlockId", unlockId);
 		}
-	    // Always call the superclass so it can save the view hierarchy state
-	    super.onSaveInstanceState(savedInstanceState);
+		// Always call the superclass so it can save the view hierarchy state
+		super.onSaveInstanceState(savedInstanceState);
 	}
-	
+
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
-	    // Always call the superclass so it can restore the view hierarchy
-	    super.onRestoreInstanceState(savedInstanceState);
-	    if (doorId == null && unlockId == null){
-	    	// Restore state members from saved instance
-	    	doorId = savedInstanceState.getString("doorId");
-	    	unlockId = savedInstanceState.getString("unlockId");
-	    }
+		// Always call the superclass so it can restore the view hierarchy
+		super.onRestoreInstanceState(savedInstanceState);
+		if (doorId == null && unlockId == null) {
+			// Restore state members from saved instance
+			doorId = savedInstanceState.getString("doorId");
+			unlockId = savedInstanceState.getString("unlockId");
+		}
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item){
+	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-            // This is called when the Home (Up) button is pressed
-            // in the Action Bar.
-            Intent parentActivityIntent = new Intent(this, KeysActivity.class);
-            parentActivityIntent.addFlags(
-                    Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                    Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(parentActivityIntent);
-            finish();
-            return true;
+			// This is called when the Home (Up) button is pressed
+			// in the Action Bar.
+			Intent parentActivityIntent = new Intent(this, KeysActivity.class);
+			parentActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+					| Intent.FLAG_ACTIVITY_NEW_TASK);
+			startActivity(parentActivityIntent);
+			finish();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 }

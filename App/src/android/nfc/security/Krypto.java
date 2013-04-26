@@ -6,6 +6,7 @@ import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.*;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -34,13 +35,12 @@ public class Krypto implements Serializable {
 
 	//Version 1. This is a required property for Serialization
 	private static final long serialVersionUID = 1L;
-	//If change KEY_SIZE also change end exp (KEY_SIZE = 1024 -> EXP = 5)
-	private static transient final int KEY_SIZE= 1024;
+	private static transient final int KEY_SIZE= 512;
 	private static transient final int END_EXP = 5;
 	private static transient final String CHOSEN_ALGORITHM = "RSA";
 	private RSAPublicKey publicKey;
 	private RSAPrivateKey privateKey;
-	
+	private static BigInteger exp;
 	
 	/**
 	 * Empty Constructor to generate a Keypair 
@@ -54,8 +54,8 @@ public class Krypto implements Serializable {
 	 * @param publickey
 	 */
 	public Krypto(String publickey) {
-		BigInteger exp = new BigInteger(publickey.substring(0, END_EXP));
-		BigInteger mod = new BigInteger(publickey.substring(END_EXP));
+		exp = new BigInteger("010001",16);
+		BigInteger mod = new BigInteger(publickey);
 
 		RSAPublicKeySpec RSAspec = new RSAPublicKeySpec(mod, exp);
 
@@ -80,7 +80,7 @@ public class Krypto implements Serializable {
 	public String encryptMessage(String msg) {
 		byte[] encryptedMessage = null;
 		try {
-			Cipher cipher = Cipher.getInstance(CHOSEN_ALGORITHM,"BC");
+			Cipher cipher = Cipher.getInstance(CHOSEN_ALGORITHM ,"BC");
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 			encryptedMessage = cipher.doFinal(msg.getBytes());
 		} catch (Exception e) {
@@ -154,12 +154,19 @@ public class Krypto implements Serializable {
 		KeyFactory fact;
 		RSAPublicKeySpec pub = null;
 
-		try {
-			fact = KeyFactory.getInstance(CHOSEN_ALGORITHM,"BC");
-			pub = fact.getKeySpec(publicKey, RSAPublicKeySpec.class);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			try {
+				fact = KeyFactory.getInstance(CHOSEN_ALGORITHM,"BC");
+				pub = fact.getKeySpec(publicKey, RSAPublicKeySpec.class);
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchProviderException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvalidKeySpecException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		return pub.getPublicExponent().toString() + pub.getModulus().toString();
 	}

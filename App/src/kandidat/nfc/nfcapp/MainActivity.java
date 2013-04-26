@@ -35,15 +35,14 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	//Every time a new Message is received it is put here
 	private String latestRecievedMsg;
 	
-	private NFCPMessage nfcpMessage;
+	private NFCPMessage latestReceivedNFCPMessage;
 	private final long TIMEOUT = 60 *1000;//GONE IN 60seconds
 	private Long loginTime;
 	// Object representing the NFC adapter
 	private NfcAdapter nfcAdapter;
 	//DAO used to access database
 	private DAO dao;
-	//Krypto, only one instance per instance of class. Preserved when the class is destroyed.
-	private Krypto krypto;
+	private Krypto receivedKrypto;
 	
 
 	@SuppressLint("NewApi")
@@ -92,11 +91,8 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 		dao.insertOrUpdate("IIII", "iiii");
 		dao.insertOrUpdate("JJJJ", "jjjj");
 		
-		//Only create a instance of the Krypto class if there is none already
-		if (krypto == null){
-			krypto = new Krypto();
-		}
-		
+		//Only create a instance of the Krypto class if there is none 
+
 	    try {
 	        ViewConfiguration config = ViewConfiguration.get(this);
 	        Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
@@ -107,6 +103,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	    } catch (Exception ex) {
 	        // Ignore
 	    }
+
 	}
 
 	/**
@@ -178,10 +175,10 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	 */
 	void processIntent(Intent intent) {
 			setMessage(getLastestNFCMessage(intent));
-			nfcpMessage = new NFCPMessage(latestRecievedMsg);
+			latestReceivedNFCPMessage = new NFCPMessage(latestRecievedMsg);
 			
-			String status = nfcpMessage.getStatus();
-			String type = nfcpMessage.getType();
+			String status = latestReceivedNFCPMessage.getStatus();
+			String type = latestReceivedNFCPMessage.getType();
 			
 			if(type.equals(NFCPMessage.MESSAGE_TYPE_RESULT)){
 				
@@ -193,27 +190,20 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 					
 					// NOT NFC ACCESS
 					Intent deniedIntent = new Intent(this,DeniedActivity.class);
-					deniedIntent.putExtra("ErrorCode", nfcpMessage.getErrorCode());
+					deniedIntent.putExtra("ErrorCode", latestReceivedNFCPMessage.getErrorCode());
 					startActivity(deniedIntent);
-					nfcpMessage.clearAll();
+					latestReceivedNFCPMessage.clearAll();
 					
 				}
 				
 			}else if(type.equals(NFCPMessage.MESSAGE_TYPE_SHARE)){
 				
 				//getting errorCode to see if unlockId is encrypted or not
-				String errorCode = nfcpMessage.getErrorCode();
-				
-				String unlockId = nfcpMessage.getUnlockId();
+				String errorCode = latestReceivedNFCPMessage.getErrorCode();	
 				
 				//If there is encryption
 				if(errorCode.equals(NFCPMessage.ERROR_NONE)){
 					
-					if(unlockId != null){
-
-						nfcpMessage.setUnlockId(krypto.decryptMessage(unlockId));
-
-					}
 					
 				}
 				
@@ -221,10 +211,10 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 				//Ask before insert
 				new AlertDialog.Builder(this)
 				.setTitle("Confirm insert!")
-				.setMessage("Do you really want to insert lockId: " +  nfcpMessage.getUniqueId() + " and unlockId: " + nfcpMessage.getUnlockId() + "?")
+				.setMessage("Do you really want to insert lockId: " +  latestReceivedNFCPMessage.getUniqueId() + " and unlockId: " + latestReceivedNFCPMessage.getUnlockId() + "?")
 				.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 				    public void onClick(DialogInterface dialog, int whichButton) {
-				    	dao.insertOrUpdate(nfcpMessage.getUniqueId(), nfcpMessage.getUnlockId());
+				    	dao.insertOrUpdate(latestReceivedNFCPMessage.getUniqueId(), latestReceivedNFCPMessage.getUnlockId());
 				    	}
 				    }
 				)
@@ -233,9 +223,10 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 				
 			}else if(type.equals(NFCPMessage.MESSAGE_TYPE_BEACON)){
 				
+				receivedKrypto = new Krypto(latestReceivedNFCPMessage.getPublicKey());
 				//Save latest received publicKey to encrypt with
 				Editor editor = getSharedPreferences("publicKey", 0).edit();
-				editor.putString("publicKey", nfcpMessage.getPublicKey());
+				editor.putString("publicKey", latestReceivedNFCPMessage.getPublicKey());
 				editor.commit();
 		
 			}
@@ -248,28 +239,40 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	 * much debug here. In futher add cases and delete cases.
 	 */
 	public NdefMessage createNdefMessage(NfcEvent event) {
-		
 		NFCPMessage sendMsg = null;
 
 		//If no message has been received.
-		if (nfcpMessage == null) { 
+		if (latestReceivedNFCPMessage == null) { 
 			
-			String publicKey = krypto.publicKeyToString();
 			
 			sendMsg = new NFCPMessage(NFCPMessage.TEST_NAME,NFCPMessage.TEST_ID,NFCPMessage.STATUS_OK,
 					NFCPMessage.MESSAGE_TYPE_BEACON,NFCPMessage.ERROR_NONE);
-			sendMsg.setPublicKey(publicKey);
+
 			
-		} else if (nfcpMessage.getType().equals(NFCPMessage.MESSAGE_TYPE_BEACON)) {
+		} else if (latestReceivedNFCPMessage.getType().equals(NFCPMessage.MESSAGE_TYPE_BEACON)) {
 			
 			//Check if key is in database
-			String unlockId = dao.get(nfcpMessage.getUniqueId());
+			String unlockId = dao.get(latestReceivedNFCPMessage.getUniqueId());
 			
 			if(unlockId != null){ //If a key exists in the Database send unlock message(type 2)
+				if(!latestReceivedNFCPMessage.getPublicKey().equals("")){
+					
+					String encryptedMessage = receivedKrypto.encryptMessage(unlockId+latestReceivedNFCPMessage.getRandomMsg());
+					
+					sendMsg = new NFCPMessage(latestReceivedNFCPMessage.getName(), latestReceivedNFCPMessage.getId(),
+							NFCPMessage.STATUS_OK,NFCPMessage.MESSAGE_TYPE_UNLOCK,NFCPMessage.ERROR_NONE,
+							encryptedMessage);
+				}else{
+					runOnUiThread(new Runnable() {
+			            @Override
+			            public void run() {
+			            	Toast.makeText(MainActivity.this,"No encryption",
+			            			Toast.LENGTH_LONG).show();
+			            }
+			        });
+					//Kanske access denied
+				}
 				
-				sendMsg = new NFCPMessage(nfcpMessage.getName(), nfcpMessage.getId(),
-						NFCPMessage.STATUS_OK,NFCPMessage.MESSAGE_TYPE_UNLOCK,NFCPMessage.ERROR_NONE,
-						unlockId);
 			
 			} else {
 				//Can't toast in automatic handler so we have to run in UI-thread
@@ -284,12 +287,12 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 			
 			}
 			
-		} else if (nfcpMessage.getType().equals(NFCPMessage.MESSAGE_TYPE_UNLOCK)) { //If message is of type 2(unlock command). Here only for debugging. Should be handled by controller.
+		} else if (latestReceivedNFCPMessage.getType().equals(NFCPMessage.MESSAGE_TYPE_UNLOCK)) { //If message is of type 2(unlock command). Here only for debugging. Should be handled by controller.
 
 			sendMsg = new NFCPMessage("TE", "01", NFCPMessage.STATUS_OK,
 					NFCPMessage.MESSAGE_TYPE_RESULT,NFCPMessage.ERROR_NONE, "Anna");
 
-		} else if (nfcpMessage.getType().equals(NFCPMessage.MESSAGE_TYPE_RESULT)) { //If latest received is of type 3 we should check the result
+		} else if (latestReceivedNFCPMessage.getType().equals(NFCPMessage.MESSAGE_TYPE_RESULT)) { //If latest received is of type 3 we should check the result
 			
 			return null;
 
@@ -344,8 +347,8 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 	    // Save the user's state
-		if (krypto != null){
-			savedInstanceState.putSerializable("KRYPTO", krypto);
+		if (receivedKrypto != null){
+			savedInstanceState.putSerializable("KRYPTO", receivedKrypto);
 		}
 	
 	    // Always call the superclass so it can save the view hierarchy state
@@ -357,7 +360,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	    super.onRestoreInstanceState(savedInstanceState);
 	   
 	    // Restore state members from saved instance
-	    krypto = (Krypto) savedInstanceState.getSerializable("KRYPTO");
+	    receivedKrypto = (Krypto) savedInstanceState.getSerializable("KRYPTO");
 	}
 	@Override
 	public void onDestroy(){
