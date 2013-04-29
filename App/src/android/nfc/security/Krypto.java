@@ -55,7 +55,7 @@ public class Krypto implements Serializable {
 	 */
 	public Krypto(String publickey) {
 		exp = new BigInteger("010001",16);
-		BigInteger mod = new BigInteger(publickey);
+		BigInteger mod = new BigInteger(publickey,16);
 
 		RSAPublicKeySpec RSAspec = new RSAPublicKeySpec(mod, exp);
 

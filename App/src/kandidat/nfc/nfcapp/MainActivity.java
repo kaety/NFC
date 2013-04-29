@@ -222,12 +222,13 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 				//insert into Database
 				
 			}else if(type.equals(NFCPMessage.MESSAGE_TYPE_BEACON)){
-				
-				receivedKrypto = new Krypto(latestReceivedNFCPMessage.getPublicKey());
-				//Save latest received publicKey to encrypt with
-				Editor editor = getSharedPreferences("publicKey", 0).edit();
-				editor.putString("publicKey", latestReceivedNFCPMessage.getPublicKey());
-				editor.commit();
+				if (!latestReceivedNFCPMessage.getPublicKey().equals("")){
+					receivedKrypto = new Krypto(latestReceivedNFCPMessage.getPublicKey());
+					//Save latest received publicKey to encrypt with
+					Editor editor = getSharedPreferences("publicKey", 0).edit();
+					editor.putString("publicKey", latestReceivedNFCPMessage.getPublicKey());
+					editor.commit();
+				}
 		
 			}
 			getIntent().setAction("");

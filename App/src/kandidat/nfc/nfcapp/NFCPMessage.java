@@ -70,6 +70,7 @@ public class NFCPMessage {
 	 */
 	public NFCPMessage(String s){
 		publicKey = "";
+		randomMsg = "";
 		if (s.length() >= 11){
 			name = s.substring(0, 2); //2 bytes alltså två ASCII-tecken
 			id = s.substring(2, 4); //2 bytes alltså två ASCII-tecken
@@ -82,7 +83,7 @@ public class NFCPMessage {
 			//If it is of other type it is unlockId maybe followed by a public key
 			}else{
 				unlockId = s.substring(7, 11); //4 bytes
-				if(s.length() > 11){
+				if(s.length() > 139){
 					publicKey = s.substring(11,139); 
 					randomMsg = s.substring(139);
 				}
@@ -109,7 +110,8 @@ public class NFCPMessage {
 				status +
 				errorCode +
 				unlockId +
-				publicKey;
+				publicKey +
+				randomMsg;
 		
 	}
 
@@ -134,11 +136,7 @@ public class NFCPMessage {
 		return id;
 	}
 	public String getPublicKey(){
-		if(this.publicKey.equals("")){
-			return null;
-		}else{
-			return publicKey;
-		}
+		return publicKey;
 	}
 	
 	public String getRandomMsg(){
