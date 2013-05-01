@@ -103,7 +103,6 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	    } catch (Exception ex) {
 	        // Ignore
 	    }
-
 	}
 
 	/**

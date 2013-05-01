@@ -83,7 +83,7 @@ public class NFCPMessage {
 			//If it is of other type it is unlockId maybe followed by a public key
 			}else{
 				unlockId = s.substring(7, 11); //4 bytes
-				if(s.length() > 139){
+				if(s.length() >= 139){
 					publicKey = s.substring(11,139); 
 					randomMsg = s.substring(139);
 				}
