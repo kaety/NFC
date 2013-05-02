@@ -2,6 +2,9 @@ package kandidat.nfc.nfcapp;
 
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -17,6 +20,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -173,7 +177,8 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	 * @param intent
 	 */
 	void processIntent(Intent intent) {
-			setMessage(getLastestNFCMessage(intent));
+			showMessageInTextView(getLastestNFCMessage(intent));
+			Logger.getAnonymousLogger().log(Level.SEVERE,latestRecievedMsg);
 			latestReceivedNFCPMessage = new NFCPMessage(latestRecievedMsg);
 			
 			String status = latestReceivedNFCPMessage.getStatus();
@@ -233,10 +238,11 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 			getIntent().setAction("");
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	/**
 	 * NDEF message handler
-	 * much debug here. In futher add cases and delete cases.
+	 * much debug here. In future add cases and delete cases.
 	 */
 	public NdefMessage createNdefMessage(NfcEvent event) {
 		NFCPMessage sendMsg = null;
@@ -257,11 +263,12 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 			if(unlockId != null){ //If a key exists in the Database send unlock message(type 2)
 				if(!latestReceivedNFCPMessage.getPublicKey().equals("")){
 					
-					String encryptedMessage = receivedKrypto.encryptMessage(unlockId+latestReceivedNFCPMessage.getRandomMsg());
-					
+					String encryptedMessage = receivedKrypto.encryptMessage(latestReceivedNFCPMessage.getRandomMsg()+unlockId);
+					Log.e("Krypto",encryptedMessage);
 					sendMsg = new NFCPMessage(latestReceivedNFCPMessage.getName(), latestReceivedNFCPMessage.getId(),
 							NFCPMessage.STATUS_OK,NFCPMessage.MESSAGE_TYPE_UNLOCK,NFCPMessage.ERROR_NONE,
 							encryptedMessage);
+					Logger.getAnonymousLogger().log(Level.SEVERE, encryptedMessage);
 				}else{
 					runOnUiThread(new Runnable() {
 			            @Override
@@ -337,11 +344,9 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	 * 
 	 * @param s
 	 */
-	public void setMessage(String s) {
-
+	public void showMessageInTextView(String s) {
 		TextView view = (TextView) findViewById(R.id.message);
 		view.setText(s + "\n");
-		
 	}
 	
 	@Override

@@ -51,7 +51,7 @@ public class NFCPMessage {
 		this.randomMsg = "";
 	}
 	
-	//Constructor Type1 Message
+	//Constructor Type1 Message//Lock will 
 	public NFCPMessage(String name, String id, String status, String typeOfMessage,
 			String errorCode) {
 		this.name = name;
@@ -71,21 +71,23 @@ public class NFCPMessage {
 	public NFCPMessage(String s){
 		publicKey = "";
 		randomMsg = "";
-		if (s.length() >= 11){
+		if (s.length() >= 7){
 			name = s.substring(0, 2); //2 bytes alltså två ASCII-tecken
 			id = s.substring(2, 4); //2 bytes alltså två ASCII-tecken
 			typeOfMessage = s.substring(4, 5); //1 byte
 			status = s.substring(5,6);//1 byte
-			errorCode = s.substring(6, 7);
+			errorCode = s.substring(6, 7); //1 byte
 			//If it is of type SHARE then the rest of message is the encrypted ulockId
-			if (typeOfMessage.equals(NFCPMessage.MESSAGE_TYPE_SHARE)){
-				unlockId = s.substring(7);
-			//If it is of other type it is unlockId maybe followed by a public key
-			}else{
-				unlockId = s.substring(7, 11); //4 bytes
-				if(s.length() >= 139){
-					publicKey = s.substring(11,139); 
-					randomMsg = s.substring(139);
+			if(s.length() >= 11){
+				if (typeOfMessage.equals(NFCPMessage.MESSAGE_TYPE_SHARE)){
+					unlockId = s.substring(7);
+				//If it is of other type it is unlockId maybe followed by a public key
+				}else{
+					unlockId = s.substring(7, 11); //4 bytes
+					if(s.length() >= 139){
+						randomMsg = s.substring(7,11);
+						publicKey = s.substring(11,139); 
+					}
 				}
 			}
 		}

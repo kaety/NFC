@@ -37,6 +37,7 @@ public class Krypto implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static transient final int KEY_SIZE= 512;
 	private static transient final int END_EXP = 5;
+	private static transient final String CHOSEN_CIPHER = "RSA/ECB/PKCS1Padding";
 	private static transient final String CHOSEN_ALGORITHM = "RSA";
 	private RSAPublicKey publicKey;
 	private RSAPrivateKey privateKey;
@@ -80,13 +81,20 @@ public class Krypto implements Serializable {
 	public String encryptMessage(String msg) {
 		byte[] encryptedMessage = null;
 		try {
-			Cipher cipher = Cipher.getInstance(CHOSEN_ALGORITHM ,"BC");
+			Cipher cipher = Cipher.getInstance(CHOSEN_CIPHER ,"BC");
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 			encryptedMessage = cipher.doFinal(msg.getBytes());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return Base64.encodeToString(encryptedMessage, Base64.DEFAULT);
+		//return Base64.encodeToString(encryptedMessage, Base64.NO_WRAP);
+		
+		//Return a hex string instead
+		StringBuilder sb = new StringBuilder();
+		for(byte b:encryptedMessage){
+			sb.append(String.format("%02x", b&0xff));		
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -102,7 +110,7 @@ public class Krypto implements Serializable {
 
 				Cipher cipher;
 				try {
-					cipher = Cipher.getInstance(CHOSEN_ALGORITHM,"BC");
+					cipher = Cipher.getInstance(CHOSEN_CIPHER,"BC");
 					cipher.init(Cipher.DECRYPT_MODE, privateKey);
 					cipherData = cipher.doFinal(decrypt);
 				} catch (NoSuchAlgorithmException e) {
