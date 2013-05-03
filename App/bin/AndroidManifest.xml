@@ -24,7 +24,7 @@
 
         <!-- android:theme="@style/AppTheme" -->
         <activity
-            android:name="kandidat.nfc.nfcapp.LoginActivity"
+            android:name="datx02.group15.activities.LoginActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateAlwaysVisible" >
             <intent-filter>
@@ -34,28 +34,28 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="kandidat.nfc.nfcapp.PasswordActivity"
+            android:name="datx02.group15.activities.PasswordActivity"
             android:label="@string/title_activity_password" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="SettingsActivity" />
         </activity>
         <activity
-            android:name="kandidat.nfc.nfcapp.AccessActivity"
+            android:name="datx02.group15.activities.AccessActivity"
             android:label="@string/title_activity_access" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
         </activity>
         <activity
-            android:name="kandidat.nfc.nfcapp.DeniedActivity"
+            android:name="datx02.group15.activities.DeniedActivity"
             android:label="@string/title_activity_denied" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
         </activity>
         <activity
-            android:name="kandidat.nfc.nfcapp.MainActivity"
+            android:name="datx02.group15.activities.MainActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
 			android:launchMode="singleTask" > <!-- Fuck you! Don't change  -->
@@ -67,7 +67,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="kandidat.nfc.nfcapp.SettingsActivity"
+            android:name="datx02.group15.activities.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName="MainActivity" >
             <meta-data
@@ -75,17 +75,17 @@
                 android:value="MainActivity" />
         </activity>
         <activity
-            android:name="kandidat.nfc.nfcapp.KeysActivity"
+            android:name="datx02.group15.activities.KeysActivity"
             android:label="@string/title_activity_keys"
-            android:parentActivityName="kandidat.nfc.nfcapp.SettingsActivity" >
+            android:parentActivityName="datx02.group15.activities.SettingsActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="kandidat.nfc.nfcapp.SettingsActivity" />
         </activity>
         <activity
-            android:name="kandidat.nfc.nfcapp.ShareActivity"
+            android:name="datx02.group15.activities.ShareActivity"
             android:label="@string/title_activity_share"
-            android:parentActivityName="kandidat.nfc.nfcapp.KeysActivity" >
+            android:parentActivityName="datx02.group15.activities.KeysActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="kandidat.nfc.nfcapp.KeysActivity" />
