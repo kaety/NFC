@@ -13,6 +13,7 @@ public class NFCPMessage {
 	public static final String MESSAGE_TYPE_UNLOCK = "2";
 	public static final String MESSAGE_TYPE_RESULT = "3";
 	public static final String MESSAGE_TYPE_SHARE = "4";
+	public static final String MESSAGE_TYPE_CONFIG = "5";
 	
 	//Different status
 	public static final String STATUS_OK = "0";

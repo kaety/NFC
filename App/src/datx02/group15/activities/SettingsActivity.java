@@ -1,16 +1,21 @@
 package datx02.group15.activities;
 
+import datx02.group15.dialogs.AdminDialog;
+import datx02.group15.dialogs.AdminDialog.DialogAdminInterface;
 import kandidat.nfc.nfcapp.R;
 import android.os.Bundle;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Intent;
-import android.view.Menu;
+import android.content.SharedPreferences.Editor;
 import android.view.MenuItem;
 import android.view.View;
-import android.support.v4.app.NavUtils;
+import android.widget.Toast;
 
-public class SettingsActivity extends Activity {
+public class SettingsActivity extends Activity implements DialogAdminInterface {
+	
+	public static final String newUnlockId = "1234";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,4 +51,29 @@ public class SettingsActivity extends Activity {
 	public void toKeys(View view){
 		startActivity(new Intent(this,KeysActivity.class));
 	}
+	public void toAdmin(View view){
+		DialogFragment newFragment = new AdminDialog();
+	    newFragment.show(getFragmentManager(), "");
+	}
+
+
+	@Override
+	public void onDialogAdminPositiveClick(DialogFragment dialog, String unlockId) {
+		if(unlockId.length() == 4){
+			Editor editor = getSharedPreferences(newUnlockId, 0).edit();
+			editor.putString(newUnlockId, unlockId);
+			editor.commit();
+			Toast.makeText(this, unlockId, Toast.LENGTH_LONG).show();
+		}else{
+			Toast.makeText(this, "It need to be exactly 4 characters long", Toast.LENGTH_LONG).show();
+		}
+		
+	}
+
+
+	@Override
+	public void onDialogAdminNegativeClick(DialogFragment dialog) {
+		dialog.dismiss();
+	}
+
 }

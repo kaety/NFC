@@ -23,6 +23,7 @@ import android.provider.Settings;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -48,7 +49,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 	
 	private NFCPMessage latestReceivedNFCPMessage;
 	//Timer constant and the time user logged in
-	private final long TIMEOUT = 60 *1000;//GONE IN 60seconds
+	private final long TIMEOUT = 300 *1000;//GONE IN 60seconds
 	private Long loginTime;
 	// Object representing the NFC adapter
 	private NfcAdapter nfcAdapter;
@@ -177,9 +178,14 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 			String type = latestReceivedNFCPMessage.getType();
 			
 			if(type.equals(NFCPMessage.MESSAGE_TYPE_RESULT)){
+				SharedPreferences pref = getSharedPreferences(SettingsActivity.newUnlockId, Context.MODE_PRIVATE);
+				String change = pref.getString(SettingsActivity.newUnlockId, "");
 				
 				if (status.equals(NFCPMessage.STATUS_OK)) {
-				
+					Editor editor = pref.edit();
+					editor.putString(SettingsActivity.newUnlockId, "");
+					editor.commit();
+					dataAccessObject.insertOrUpdate(latestReceivedNFCPMessage.getName()+latestReceivedNFCPMessage.getId(), change);
 					startActivity(new Intent(this,AccessActivity.class));
 				
 				} else if (status.equals(NFCPMessage.STATUS_ERROR)) {
@@ -241,35 +247,47 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 
 		//If no message has been received.
 		if (latestReceivedNFCPMessage == null) { 
-			runOnUiThread(new Runnable() {
-	            @Override
-	            public void run() {
-	            	Toast.makeText(MainActivity.this,
-	            			"Error. The lock has to send the first message."
-	            			,Toast.LENGTH_LONG).show();
-	            }
-	        });
 			return null;
 		}else if (latestReceivedNFCPMessage.getType().equals(NFCPMessage.MESSAGE_TYPE_BEACON)) {
 			
 			//Check if key is in database
 			String unlockId = dataAccessObject.get(latestReceivedNFCPMessage.getUniqueId());
-			if(unlockId != null){ //If a key exists in the Database send unlock message(type 2)
-				if(!latestReceivedNFCPMessage.getPublicKey().equals("")){
-					String encryptedMessage = receivedRSAHandler.encryptMessage(latestReceivedNFCPMessage.getRandomMsg()+unlockId);
-
-					sendMsg = new NFCPMessage(latestReceivedNFCPMessage.getName(), latestReceivedNFCPMessage.getId(),
-							NFCPMessage.STATUS_OK,NFCPMessage.MESSAGE_TYPE_UNLOCK,NFCPMessage.ERROR_NONE,
-							encryptedMessage);
-
+			if(unlockId != null){ //If a key exists in the Database
+				SharedPreferences pref = getSharedPreferences(SettingsActivity.newUnlockId, Context.MODE_PRIVATE);
+				String change = pref.getString(SettingsActivity.newUnlockId, "");
+				if(change == ""){
+					if(!latestReceivedNFCPMessage.getPublicKey().equals("")){
+						String encryptedMessage = receivedRSAHandler.encryptMessage(latestReceivedNFCPMessage.getRandomMsg()+unlockId);
+	
+						sendMsg = new NFCPMessage(latestReceivedNFCPMessage.getName(), latestReceivedNFCPMessage.getId(),
+								NFCPMessage.STATUS_OK,NFCPMessage.MESSAGE_TYPE_UNLOCK,NFCPMessage.ERROR_NONE,
+								encryptedMessage);
+	
+					}else{
+						runOnUiThread(new Runnable() {
+				            @Override
+				            public void run() {
+				            	Toast.makeText(MainActivity.this,"Error. No encryption.",Toast.LENGTH_LONG).show();
+				            }
+				        });
+						return null;
+					}
 				}else{
-					runOnUiThread(new Runnable() {
-			            @Override
-			            public void run() {
-			            	Toast.makeText(MainActivity.this,"Error. No encryption.",Toast.LENGTH_LONG).show();
-			            }
-			        });
-					return null;
+					if(!latestReceivedNFCPMessage.getPublicKey().equals("")){
+						String encryptedMessage = receivedRSAHandler.encryptMessage(latestReceivedNFCPMessage.getRandomMsg()+unlockId+change);
+	
+						sendMsg = new NFCPMessage(latestReceivedNFCPMessage.getName(), latestReceivedNFCPMessage.getId(),
+								NFCPMessage.STATUS_OK,NFCPMessage.MESSAGE_TYPE_CONFIG,NFCPMessage.ERROR_NONE,
+								encryptedMessage);
+					}else{
+						runOnUiThread(new Runnable() {
+				            @Override
+				            public void run() {
+				            	Toast.makeText(MainActivity.this,"Error. No encryption.",Toast.LENGTH_LONG).show();
+				            }
+				        });
+						return null;
+					}
 				}
 			}else{
 				//Can't toast in automatic handler so we have to run in UI-thread
