@@ -4,6 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
+    android:background="@drawable/background_app"
     tools:context=".MainActivity" >
 
     <LinearLayout
@@ -15,7 +16,7 @@
             android:id="@+id/imageView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/start_banner" />
+            android:src="@drawable/main_banner" />
 
         <TextView
             android:id="@+id/title"

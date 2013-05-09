@@ -26,6 +26,8 @@ public class KeysDialogCreate extends DialogFragment {
 		
 		builder.setView(view);
 
+		builder.setTitle("Create");
+		
 		builder.setPositiveButton(R.string.dialog_create, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				String door = doorId.getText().toString();
