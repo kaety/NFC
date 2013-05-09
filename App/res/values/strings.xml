@@ -18,7 +18,7 @@
     <string name="title_activity_keys"     >Back to settings</string>
     <string name="title_activity_share"    >Back to Key ring</string>
     <string name="title_activity_password" >Back to settings</string>
-	<string name="change_unlockId">New wanted unlockId</string>
+	<string name="change_unlockId">New key</string>
     <string name="door_id">Name of the Door</string>
     <string name="door_key">Key value</string>
     <string name="keys_create">Create</string>

@@ -24,6 +24,7 @@ public class AdminDialog extends DialogFragment {
 		doorId = (EditText) view.findViewById(R.id.dialog_admin_unlockId);
 		
 		builder.setView(view);
+		builder.setTitle("Administrate Key");
 
 		builder.setPositiveButton(R.string.dialog_create, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {

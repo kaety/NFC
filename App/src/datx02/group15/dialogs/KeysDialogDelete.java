@@ -17,6 +17,7 @@ public class KeysDialogDelete extends DialogFragment {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		builder.setView(inflater.inflate(R.layout.dialog_delete, null));
+		builder.setTitle("Delete");
 			builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					mListener.onDialogDeletePositiveClick(KeysDialogDelete.this);

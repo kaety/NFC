@@ -24,7 +24,7 @@ public class KeysDialogSearch extends DialogFragment {
 		doorId = (EditText) view.findViewById(R.id.dialog_door_id);
 		
 		builder.setView(view);
-		
+		builder.setTitle("Search");
 		builder.setPositiveButton("Search", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				String door = doorId.getText().toString();
