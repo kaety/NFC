@@ -62,8 +62,8 @@
             android:name="datx02.group15.activities.MainActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
-			android:launchMode="singleTask" 
-			android:screenOrientation="portrait"> <!-- Fuck you! Don't change  -->
+			android:launchMode="singleTask" >
+            <!-- Fuck you! Don't change  -->
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
