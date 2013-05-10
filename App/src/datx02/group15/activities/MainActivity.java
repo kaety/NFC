@@ -92,8 +92,9 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 		dataAccessObject.open();
 		
 		//Insert values to use with test
-		dataAccessObject.insertOrUpdate(NFCPMessage.TEST_UNIQUEID, NFCPMessage.TEST_UNLOCKID);;
-
+		if(dataAccessObject.get(NFCPMessage.TEST_UNIQUEID) == null){
+			dataAccessObject.insertOrUpdate(NFCPMessage.TEST_UNIQUEID, NFCPMessage.TEST_UNLOCKID);;
+		}
 	    try {
 	        ViewConfiguration config = ViewConfiguration.get(this);
 	        Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
