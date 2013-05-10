@@ -26,7 +26,8 @@
         <activity
             android:name="datx02.group15.activities.LoginActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="stateAlwaysVisible" >
+            android:windowSoftInputMode="stateAlwaysVisible"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,21 +36,24 @@
         </activity>
         <activity
             android:name="datx02.group15.activities.PasswordActivity"
-            android:label="@string/title_activity_password" >
+            android:label="@string/title_activity_password"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="SettingsActivity" />
         </activity>
         <activity
             android:name="datx02.group15.activities.AccessActivity"
-            android:label="@string/title_activity_access" >
+            android:label="@string/title_activity_access"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
         </activity>
         <activity
             android:name="datx02.group15.activities.DeniedActivity"
-            android:label="@string/title_activity_denied" >
+            android:label="@string/title_activity_denied"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
@@ -58,7 +62,8 @@
             android:name="datx02.group15.activities.MainActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
-			android:launchMode="singleTask" > <!-- Fuck you! Don't change  -->
+			android:launchMode="singleTask" 
+			android:screenOrientation="portrait"> <!-- Fuck you! Don't change  -->
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
@@ -69,7 +74,8 @@
         <activity
             android:name="datx02.group15.activities.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName="MainActivity" >
+            android:parentActivityName="MainActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MainActivity" />
@@ -77,7 +83,8 @@
         <activity
             android:name="datx02.group15.activities.KeysActivity"
             android:label="@string/title_activity_keys"
-            android:parentActivityName="datx02.group15.activities.SettingsActivity" >
+            android:parentActivityName="datx02.group15.activities.SettingsActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="kandidat.nfc.nfcapp.SettingsActivity" />
@@ -85,7 +92,8 @@
         <activity
             android:name="datx02.group15.activities.ShareActivity"
             android:label="@string/title_activity_share"
-            android:parentActivityName="datx02.group15.activities.KeysActivity" >
+            android:parentActivityName="datx02.group15.activities.KeysActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="kandidat.nfc.nfcapp.KeysActivity" />
