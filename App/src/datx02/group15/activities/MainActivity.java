@@ -186,7 +186,9 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 					Editor editor = pref.edit();
 					editor.putString(SettingsActivity.newUnlockId, "");
 					editor.commit();
-					dataAccessObject.insertOrUpdate(latestReceivedNFCPMessage.getName()+latestReceivedNFCPMessage.getId(), change);
+					if (change != ""){
+						dataAccessObject.insertOrUpdate(latestReceivedNFCPMessage.getName()+latestReceivedNFCPMessage.getId(), change);
+					}
 					startActivity(new Intent(this,AccessActivity.class));
 				
 				} else if (status.equals(NFCPMessage.STATUS_ERROR)) {
